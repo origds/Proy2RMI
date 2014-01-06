@@ -133,4 +133,9 @@ implements Solicitud {
     return false;
   }
 
+  public void sal(Usuario u)
+  throws java.rmi.RemoteException {
+    registrarEnLog(u,"sal",0);
+  }
+
 }
