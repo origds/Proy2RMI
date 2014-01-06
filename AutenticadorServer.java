@@ -56,7 +56,7 @@ public class AutenticadorServer {
 
   public static void main(String args[])
   throws java.rmi.RemoteException {
-    leerUsuariosEnArchivo(args[1]); // falta hacer menu 
+    leerUsuariosEnArchivo(args[1]); // falta hacer menu -f -p
     new AutenticadorServer(21131);
   }
 }
