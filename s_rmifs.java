@@ -10,10 +10,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
+public class s_rmifs{
 
-public class ArchivosClienteServidor{
-
-  public ArchivosClienteServidor (int puerto){
+  public s_rmifs (int puerto){
     try{
       LocateRegistry.createRegistry(puerto);
       Solicitud s = new SolicitudImpl();

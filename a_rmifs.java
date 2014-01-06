@@ -7,9 +7,9 @@ import java.io.*;
 
 import Clases.*;
 
-public class AutenticadorServer {
+public class a_rmifs {
 
-  public AutenticadorServer (int puerto){
+  public a_rmifs (int puerto){
     try{
       LocateRegistry.createRegistry(puerto);
       Autenticador a = new AutenticadorImpl();
@@ -56,21 +56,22 @@ public class AutenticadorServer {
 
   public static void main(String args[])
   throws java.rmi.RemoteException {
-    String puerto;
+    String puerto = " ";
+    int port = 0;
     if (args.length == 4) {
       if (args[0] == "-f") {
-        System.out.println("entreee");
         leerUsuariosEnArchivo(args[1]);
         if (args[2] == "-p") {
           puerto = args[3];
+          port = Integer.parseInt(puerto);
           System.out.println("Puerto: "+puerto+"\n");
         } else {
           System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
           System.exit(0);
         }
       } else if (args[0] == "-p") {
-        System.out.println("ENTREEE");
         puerto = args[1];
+        port = Integer.parseInt(puerto);
         System.out.println("Puerto: "+args[1]+"\n");
         if (args[2] == "-f")
           leerUsuariosEnArchivo(args[3]);
@@ -83,6 +84,7 @@ public class AutenticadorServer {
         System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
         System.exit(0);
     }
-    new AutenticadorServer(21131);
+    System.out.println("Port: "+port+"\n");
+    new a_rmifs(port);
   }
 }
