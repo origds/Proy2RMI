@@ -6,6 +6,9 @@ import java.rmi.NotBoundException;
 
 import Clases.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 
 public class ArchivosClienteServidor{
@@ -22,15 +25,19 @@ public class ArchivosClienteServidor{
   }  
 
   public static void main(String [] args){
+    ArrayList<Usuario> usr = new ArrayList<Usuario>();
+    Usuario u;
     try{
       Autenticador a = (Autenticador)
       Naming.lookup("rmi://127.0.0.1:21131/AutenticadorService");
 
-      Usuario cero = new Usuario("usuario4","abcde");
-      Usuario uno = new Usuario("user1","useruser1");
-      Usuario dos = new Usuario("user2","useruser2");
-      a.guardar(uno);
-      a.guardar(dos);
+      usr = a.getUsuarios();
+      Iterator<Usuario> iterador = usr.iterator();
+
+     while(iterador.hasNext()){
+      u = iterador.next();
+      System.out.println("Encontrado: "+u.getUsuario()+" "+u.getContrasena());
+     }
 
     }
     catch (MalformedURLException murle) {

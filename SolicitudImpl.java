@@ -9,8 +9,8 @@ extends
 java.rmi.server.UnicastRemoteObject
 implements Solicitud {
 
-  public static ArrayList<Log> logCmd = new ArrayList<Log>();
-  public static ArrayList<Log> logProp = new ArrayList<Log>();
+  public static ArrayList<Log> logCmd = new ArrayList<Log>(); // 0 en registrarnEnLog
+  public static ArrayList<Log> logProp = new ArrayList<Log>(); // 1 en registrarnEnLog
 
   public SolicitudImpl() 
   throws java.rmi.RemoteException {
@@ -38,8 +38,7 @@ implements Solicitud {
       if(log.getUsuario().equals(u.getUsuario()) && 
          log.getRegistro().equals(nombreArchivo))
         return true;
-    }    
-
+    }
     return false;
   }
 
