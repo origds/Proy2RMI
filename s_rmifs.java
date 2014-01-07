@@ -9,23 +9,113 @@ import Clases.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 public class s_rmifs{
+  static int puertolocal, puertoaut;
+  static String host;
 
-  public s_rmifs (int puerto){
+  public s_rmifs (int puertolocal){
     try{
-      LocateRegistry.createRegistry(puerto);
+      LocateRegistry.createRegistry(puertolocal);
       Solicitud s = new SolicitudImpl();
-      Naming.rebind("rmi://127.0.0.1:"+puerto+"/ArchivosService", s);
+      Naming.rebind("rmi://127.0.0.1:"+puertolocal+"/ArchivosService", s);
     }
     catch(Exception e){
       System.out.println("Error: " + e);
     }
   }  
 
+  public static void menuServer(String [] param) { 
+    puertolocal = 0;
+    puertoaut = 0;
+
+    if (param.length == 6) {
+    
+      if (param[0].equals("-l")) {
+        puertolocal = Integer.parseInt(param[1]);
+        if (param[2].equals("-h")) {
+          host = param[3];
+          if (param[4].equals("-r")) {
+            puertoaut = Integer.parseInt(param[5]);    
+          } else {
+            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+            System.exit(0);
+          }
+        } else if (param[2].equals("-r")) {
+          puertoaut = Integer.parseInt(param[3]);
+          if (param[4].equals("-h")) {
+            host = param[5];    
+          } else {
+            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+            System.exit(0);
+          }
+        } else {
+          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+          System.exit(0);
+        }
+      } else if (param[0].equals("-h")) {
+        host = param[1];
+        if (param[2].equals("-l")) {
+          puertolocal = Integer.parseInt(param[3]);
+          if (param[4].equals("-r")) {
+            puertoaut = Integer.parseInt(param[5]);    
+          } else {
+            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+            System.exit(0);
+          }
+        } else if (param[2].equals("-r")) {
+          puertoaut = Integer.parseInt(param[3]);
+          if (param[4].equals("-l")) {
+            puertolocal = Integer.parseInt(param[5]);    
+          } else {
+            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+            System.exit(0);
+          }
+        } else {
+          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+          System.exit(0);
+        }
+      } else if (param[0].equals("-r")) {
+        puertoaut = Integer.parseInt(param[1]);
+        if (param[2].equals("-l")) {
+          puertolocal = Integer.parseInt(param[3]);
+          if (param[4].equals("-h")) {
+            host = param[5];    
+          } else {
+            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+            System.exit(0);
+          }
+        } else if (param[2].equals("-h")) {
+          host = param[3];
+          if (param[4].equals("-l")) {
+            puertolocal = Integer.parseInt(param[5]);
+          } else {
+            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+            System.exit(0);
+          }
+        } else {
+          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+          System.exit(0);
+        }
+      }
+    
+    } else {
+    
+        System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+        System.exit(0);
+    
+    }
+
+    System.out.println("Puerto Local: "+puertolocal+"\n");
+    System.out.println("Host: "+host+"\n");
+    System.out.println("Puerto: "+puertoaut+"\n");
+  }
+
   public static void main(String [] args){
     ArrayList<Usuario> usr = new ArrayList<Usuario>();
     Usuario u;
+
+    menuServer(args);
+
     try{
       Autenticador a = (Autenticador)
       Naming.lookup("rmi://127.0.0.1:21131/AutenticadorService");
