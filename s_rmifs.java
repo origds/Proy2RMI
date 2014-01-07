@@ -118,7 +118,7 @@ public class s_rmifs{
 
     try{
       Autenticador a = (Autenticador)
-      Naming.lookup("rmi://127.0.0.1:21131/AutenticadorService");
+      Naming.lookup("rmi://"+host+":"+puertoaut+"/AutenticadorService");
 
       usr = a.getUsuarios();
       Iterator<Usuario> iterador = usr.iterator();
