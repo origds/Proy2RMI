@@ -59,9 +59,9 @@ public class a_rmifs {
     String puerto = " ";
     int port = 0;
     if (args.length == 4) {
-      if (args[0] == "-f") {
+      if (args[0].equals("-f")) {
         leerUsuariosEnArchivo(args[1]);
-        if (args[2] == "-p") {
+        if (args[2].equals("-p")) {
           puerto = args[3];
           port = Integer.parseInt(puerto);
           System.out.println("Puerto: "+puerto+"\n");
@@ -69,11 +69,11 @@ public class a_rmifs {
           System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
           System.exit(0);
         }
-      } else if (args[0] == "-p") {
+      } else if (args[0].equals("-p")) {
         puerto = args[1];
         port = Integer.parseInt(puerto);
         System.out.println("Puerto: "+args[1]+"\n");
-        if (args[2] == "-f")
+        if (args[2].equals("-f"))
           leerUsuariosEnArchivo(args[3]);
         else {
           System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
