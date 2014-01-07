@@ -13,11 +13,11 @@ public class s_rmifs{
   static int puertolocal, puertoaut;
   static String host;
 
-  public s_rmifs (int puertolocal){
+  public s_rmifs (int puerto){
     try{
-      LocateRegistry.createRegistry(puertolocal);
+      LocateRegistry.createRegistry(puerto);
       Solicitud s = new SolicitudImpl();
-      Naming.rebind("rmi://127.0.0.1:"+puertolocal+"/ArchivosService", s);
+      Naming.rebind("rmi://127.0.0.1:"+puerto+"/ArchivosService", s);
     }
     catch(Exception e){
       System.out.println("Error: " + e);
