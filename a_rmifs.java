@@ -56,23 +56,21 @@ public class a_rmifs {
 
   public static void main(String args[])
   throws java.rmi.RemoteException {
-    String puerto = " ";
-    int port = 0;
+    
+    int puerto = 0;
+
     if (args.length == 4) {
+    
       if (args[0].equals("-f")) {
         leerUsuariosEnArchivo(args[1]);
         if (args[2].equals("-p")) {
-          puerto = args[3];
-          port = Integer.parseInt(puerto);
-          System.out.println("Puerto: "+puerto+"\n");
+          puerto = Integer.parseInt(args[3]);
         } else {
           System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
           System.exit(0);
         }
       } else if (args[0].equals("-p")) {
-        puerto = args[1];
-        port = Integer.parseInt(puerto);
-        System.out.println("Puerto: "+args[1]+"\n");
+        puerto = Integer.parseInt(args[1]);
         if (args[2].equals("-f"))
           leerUsuariosEnArchivo(args[3]);
         else {
@@ -80,11 +78,15 @@ public class a_rmifs {
           System.exit(0);
         }
       }
+    
     } else {
+    
         System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
         System.exit(0);
+    
     }
-    System.out.println("Port: "+port+"\n");
-    new a_rmifs(port);
+    
+    System.out.println("Puerto: "+puerto+"\n");
+    new a_rmifs(puerto);
   }
 }
