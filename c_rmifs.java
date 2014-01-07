@@ -89,12 +89,52 @@ public class c_rmifs {
 
   public static void main (String[] args)
   throws java.rmi.RemoteException, IOException {
+
+    String server, usuarios, comandos;
+    server = "";
+    usuarios = "";
+    comandos = "";
+    int puerto = 0;
+    boolean f,m,p,c;
+    f= false;
+    m= false;
+    p = false; 
+    c = false;
+
+  for ( int i = 0 ; i < (args.length)-1 ; i++ ) {
+
+    if (args[i].equals("-f") && !f) {
+        usuarios = args[i+1];
+        f = true;
+    } else if (args[i].equals("-m") && !m) {
+        server = args[i+1];
+        m = true;
+    } else if (args[i].equals("-p") && !p) {
+        puerto = Integer.parseInt(args[i+1]);
+        p = true;
+    } else if (args[i].equals("-c") && !c) {
+        comandos = args[i+1];
+        c = true;
+    } else {
+        System.out.println("Error de sintaxis: c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]");
+        System.exit(1); 
+    }
+
+    i = i+1;
+  }
+
+  if ((!p) || (!m)) {
+    System.out.println("Error de sintaxis: c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]");
+    System.exit(1); 
+  }
+
+  System.out.println("Puerto: "+puerto);
+  System.out.println("Servidor: "+server);
+  System.out.println("Usuarios: "+usuarios);
+  System.out.println("Comandos: "+comandos);
+
    /* try {
       leerComandosArchivo("registros.txt");
-
-
-
-
     }
     catch (MalformedURLException murle) {
       System.out.println();
