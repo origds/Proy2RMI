@@ -117,6 +117,8 @@ public class s_rmifs{
     menuServer(args);
 
     try{
+
+      Solicitud s = new SolicitudImpl();
       Autenticador a = (Autenticador)
       Naming.lookup("rmi://"+host+":"+puertoaut+"/AutenticadorService");
 

@@ -11,10 +11,20 @@ implements Solicitud {
 
   public static ArrayList<Log> logCmd = new ArrayList<Log>(); // 0 en registrarnEnLog
   public static ArrayList<Log> logProp = new ArrayList<Log>(); // 1 en registrarnEnLog
+  public static int puerto = 0;
+  public static String host = "";
 
   public SolicitudImpl() 
   throws java.rmi.RemoteException {
     super();
+  }
+
+  private void setPuerto(int p){
+    puerto = p;
+  }
+
+  private void setHost(String h){
+    host = h;
   }
 
   private void registrarEnLog (Usuario u, String accion, int n){
@@ -27,6 +37,13 @@ implements Solicitud {
     else{
       logProp.add(nuevo);
     }
+  }
+
+  public void registrar(ArrayList<Usuario> usr)
+  throws java.rmi.RemoteException {
+    A
+
+
   }
 
   private Boolean esPropietario(Usuario u, String nombreArchivo){

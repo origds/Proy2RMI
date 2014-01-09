@@ -40,7 +40,12 @@ implements Autenticador {
 
   public void setUsuarios(ArrayList<Usuario> usr)
   throws java.rmi.RemoteException {
-    usuarios.addAll(usr);
+    Usuario u;
+    Iterator<Usuario> iterador = usr.iterator();
+    while(iterador.hasNext()){
+      u = iterador.next();
+      guardar(u);
+    }
   }
 
   public ArrayList<Usuario> getUsuarios()

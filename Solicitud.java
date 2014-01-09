@@ -19,4 +19,7 @@ extends java.rmi.Remote {
 
   public void sal(Usuario u)
   throws java.rmi.RemoteException;
+
+  public void registrar(ArrayList<Usuario> usr)
+  throws java.rmi.RemoteException;
 }
