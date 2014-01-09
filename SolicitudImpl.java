@@ -25,16 +25,13 @@ implements Solicitud {
     super();
   }
 
-  private void setPuerto(int p){
+  public static void setPuerto(int p){
     puerto = p;
   }
 
-  private void setHost(String h){
+  public static void setHost(String h){
     host = h;
   }
-
-
-
 
   private void registrarEnLog (Usuario u, String accion, int n){
     Log nuevo = new Log(u.getUsuario(),accion);
@@ -50,9 +47,23 @@ implements Solicitud {
 
   public void registrar(ArrayList<Usuario> usr)
   throws java.rmi.RemoteException {
-    Autenticador auten = (Autenticador)
-    Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
-    auten.setUsuarios(usr);
+    try{
+      Autenticador auten = (Autenticador)
+      Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
+      auten.setUsuarios(usr);
+    }
+    catch (NotBoundException nbe) {
+      System.out.println();
+      System.out.println(
+       "NotBoundException");
+      System.out.println(nbe);
+    }
+    catch (MalformedURLException murle) {
+      System.out.println();
+      System.out.println(
+        "MalformedURLException");
+      System.out.println(murle);
+    }    
   }
 
   private Boolean esPropietario(Usuario u, String nombreArchivo){
@@ -87,20 +98,42 @@ implements Solicitud {
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
 
-    Autenticador auten = (Autenticador)
-    Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
+    System.out.println("Puerto auten: "+ puerto+ " host auten: "+host);
 
-    if (auten.autenticado(u)){
-      for (int i = 0; i < listaArchivos.length; i++){
-        if (listaArchivos[i].isFile())
-          archivos.add(listaArchivos[i].getName());
+    try{
+      Autenticador auten = (Autenticador)
+      Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
+
+      if (auten.autenticado(u)){
+        for (int i = 0; i < listaArchivos.length; i++){
+          if (listaArchivos[i].isFile())
+            archivos.add(listaArchivos[i].getName());
+        }
+
+        registrarEnLog(u,"rls",0);
+
+        return archivos;
       }
-
-      registrarEnLog(u,"rls",0);
-
-      return archivos;
     }
-    return null;
+    catch (MalformedURLException murle) {
+      System.out.println();
+      System.out.println(
+        "MalformedURLException");
+      System.out.println(murle);
+    }
+    catch (RemoteException re) {
+      System.out.println();
+      System.out.println(
+        "RemoteException");
+      System.out.println(re);
+    }
+    catch (NotBoundException nbe) {
+      System.out.println();
+      System.out.println(
+       "NotBoundException");
+      System.out.println(nbe);
+    }
+    return null;    
   }
 
   public Boolean sub(Usuario u, byte[] archivo, String nombreArchivo)

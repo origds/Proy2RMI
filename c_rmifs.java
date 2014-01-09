@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import Clases.*;
+import java.util.Iterator;
 
 
 public class c_rmifs {
@@ -133,9 +134,31 @@ public class c_rmifs {
   System.out.println("Usuarios: "+usuarios);
   System.out.println("Comandos: "+comandos);
 
+  try{ 
+    Usuario u = new Usuario("usuario","123456");
+    Solicitud sol = (Solicitud)
+    Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
+
+    ArrayList<String> rec = new ArrayList<String>();
+    rec = sol.rls(u);
+    if (rec!=null){
+      Iterator<String> iterador = rec.iterator();
+      while(iterador.hasNext()){
+        String arch = iterador.next();
+        System.out.println("Encontrado: "+arch);
+      }
+    }
+    else{
+      System.out.println("No estas autenticado");
+
+    }
+  }
+
+
+
    /* try {
       leerComandosArchivo("registros.txt");
-    }
+    }*/
     catch (MalformedURLException murle) {
       System.out.println();
       System.out.println(
@@ -154,13 +177,7 @@ public class c_rmifs {
        "NotBoundException");
       System.out.println(nbe);
     }
-    catch (java.lang.ArithmeticException ae) {
-      System.out.println();
-      System.out.println(
-       "java.lang.ArithmeticException");
-      System.out.println(ae);
-    }
-    catch(IOException ioe){
+    /*catch(IOException ioe){
       System.out.println();
       System.out.println(
        "java.lang.ArithmeticException");
