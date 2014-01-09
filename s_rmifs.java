@@ -25,85 +25,37 @@ public class s_rmifs{
   }  
 
   public static void menuServer(String [] param) { 
+    boolean l,h,r;
+    l = false;
+    h = false;
+    r = false;
     puertolocal = 0;
     puertoaut = 0;
+    host = "";
 
-    if (param.length == 6) {
-    
-      if (param[0].equals("-l")) {
-        puertolocal = Integer.parseInt(param[1]);
-        if (param[2].equals("-h")) {
-          host = param[3];
-          if (param[4].equals("-r")) {
-            puertoaut = Integer.parseInt(param[5]);    
-          } else {
-            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-            System.exit(0);
-          }
-        } else if (param[2].equals("-r")) {
-          puertoaut = Integer.parseInt(param[3]);
-          if (param[4].equals("-h")) {
-            host = param[5];    
-          } else {
-            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-            System.exit(0);
-          }
-        } else {
-          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-          System.exit(0);
-        }
-      } else if (param[0].equals("-h")) {
-        host = param[1];
-        if (param[2].equals("-l")) {
-          puertolocal = Integer.parseInt(param[3]);
-          if (param[4].equals("-r")) {
-            puertoaut = Integer.parseInt(param[5]);    
-          } else {
-            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-            System.exit(0);
-          }
-        } else if (param[2].equals("-r")) {
-          puertoaut = Integer.parseInt(param[3]);
-          if (param[4].equals("-l")) {
-            puertolocal = Integer.parseInt(param[5]);    
-          } else {
-            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-            System.exit(0);
-          }
-        } else {
-          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-          System.exit(0);
-        }
-      } else if (param[0].equals("-r")) {
-        puertoaut = Integer.parseInt(param[1]);
-        if (param[2].equals("-l")) {
-          puertolocal = Integer.parseInt(param[3]);
-          if (param[4].equals("-h")) {
-            host = param[5];    
-          } else {
-            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-            System.exit(0);
-          }
-        } else if (param[2].equals("-h")) {
-          host = param[3];
-          if (param[4].equals("-l")) {
-            puertolocal = Integer.parseInt(param[5]);
-          } else {
-            System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-            System.exit(0);
-          }
-        } else {
-          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-          System.exit(0);
-        }
-      }
-    
+    for ( int i = 0 ; i < (param.length)-1 ; i++ ) {
+
+    if (param[i].equals("-l") && !l) {
+        puertolocal = Integer.parseInt(param[i+1]);
+        l = true;
+    } else if (param[i].equals("-h") && !h) {
+        host = param[i+1];
+        h = true;
+    } else if (param[i].equals("-r") && !r) {
+        puertoaut = Integer.parseInt(param[i+1]);
+        r = true;
     } else {
-    
         System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-        System.exit(0);
-    
+        System.exit(1); 
     }
+
+    i = i+1;
+  }
+
+  if ((!l) || (!h) || (!r))  {
+    System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+    System.exit(1); 
+  }
 
     System.out.println("Puerto Local: "+puertolocal+"\n");
     System.out.println("Host: "+host+"\n");
@@ -129,6 +81,8 @@ public class s_rmifs{
       u = iterador.next();
       System.out.println("Encontrado: "+u.getUsuario()+" "+u.getContrasena());
      }
+
+     new s_rmifs(puertolocal);
 
     }
     catch (MalformedURLException murle) {
