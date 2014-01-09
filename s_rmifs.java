@@ -29,33 +29,33 @@ public class s_rmifs{
     l = false;
     h = false;
     r = false;
-    puertolocal = 0;
-    puertoaut = 0;
+    puertolocal = 0; // puerto local donde corre servidor de archivos
+    puertoaut = 0; // puerto donde corre servidor de autenticacion
     host = "";
 
     for ( int i = 0 ; i < (param.length)-1 ; i++ ) {
 
-    if (param[i].equals("-l") && !l) {
-        puertolocal = Integer.parseInt(param[i+1]);
-        l = true;
-    } else if (param[i].equals("-h") && !h) {
-        host = param[i+1];
-        h = true;
-    } else if (param[i].equals("-r") && !r) {
-        puertoaut = Integer.parseInt(param[i+1]);
-        r = true;
-    } else {
-        System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-        System.exit(1); 
+      if (param[i].equals("-l") && !l) {
+          puertolocal = Integer.parseInt(param[i+1]);
+          l = true;
+      } else if (param[i].equals("-h") && !h) {
+          host = param[i+1];
+          h = true;
+      } else if (param[i].equals("-r") && !r) {
+          puertoaut = Integer.parseInt(param[i+1]);
+          r = true;
+      } else {
+          System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+          System.exit(1); 
+      }
+
+      i = i+1;
     }
 
-    i = i+1;
-  }
-
-  if ((!l) || (!h) || (!r))  {
-    System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
-    System.exit(1); 
-  }
+    if ((!l) || (!h) || (!r))  {
+      System.out.println("Error de sintaxis: s_rmifs -l puertolocal -h host -r puerto");
+      System.exit(1); 
+    }
 
     System.out.println("Puerto Local: "+puertolocal+"\n");
     System.out.println("Host: "+host+"\n");
@@ -67,20 +67,22 @@ public class s_rmifs{
     Usuario u;
 
     menuServer(args);
+    Solicitud sol = new SolicitudImpl();
+    sol.setPuerto(puertoaut);
+    sol.setHost(host);
 
     try{
 
-      Solicitud s = new SolicitudImpl();
-      Autenticador a = (Autenticador)
-      Naming.lookup("rmi://"+host+":"+puertoaut+"/AutenticadorService");
+      /*Autenticador a = (Autenticador)
+      Naming.lookup("rmi://"+host+":"+puertoaut+"/AutenticadorService");*/
 
-      usr = a.getUsuarios();
+      /*usr = a.getUsuarios();
       Iterator<Usuario> iterador = usr.iterator();
 
      while(iterador.hasNext()){
       u = iterador.next();
       System.out.println("Encontrado: "+u.getUsuario()+" "+u.getContrasena());
-     }
+     }*/
 
      new s_rmifs(puertolocal);
 

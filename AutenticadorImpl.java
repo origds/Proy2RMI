@@ -14,7 +14,7 @@ implements Autenticador {
     super();
   }
 
-  public int autenticado (Usuario usuario)
+  public Boolean autenticado (Usuario usuario)
   throws java.rmi.RemoteException {
     Usuario u;
     Iterator<Usuario> iterador = usuarios.iterator();
@@ -24,9 +24,9 @@ implements Autenticador {
       System.out.println("Encontrado: "+u.getUsuario()+" "+u.getContrasena());
       if(u.getUsuario().equals(usuario.getUsuario()) && 
          u.getContrasena().equals(usuario.getContrasena()))
-        return 0;
+        return true;
     }
-    return 1;
+    return false;
   }
 
   public int guardar(Usuario usuario)

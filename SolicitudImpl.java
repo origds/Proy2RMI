@@ -1,3 +1,9 @@
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+
 import Clases.*;
 
 import java.io.*;
@@ -27,6 +33,9 @@ implements Solicitud {
     host = h;
   }
 
+
+
+
   private void registrarEnLog (Usuario u, String accion, int n){
     Log nuevo = new Log(u.getUsuario(),accion);
     if(n==0){
@@ -41,9 +50,9 @@ implements Solicitud {
 
   public void registrar(ArrayList<Usuario> usr)
   throws java.rmi.RemoteException {
-    A
-
-
+    Autenticador auten = (Autenticador)
+    Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
+    auten.setUsuarios(usr);
   }
 
   private Boolean esPropietario(Usuario u, String nombreArchivo){
@@ -78,14 +87,20 @@ implements Solicitud {
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
 
-    for (int i = 0; i < listaArchivos.length; i++){
-      if (listaArchivos[i].isFile())
-        archivos.add(listaArchivos[i].getName());
+    Autenticador auten = (Autenticador)
+    Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
+
+    if (auten.autenticado(u)){
+      for (int i = 0; i < listaArchivos.length; i++){
+        if (listaArchivos[i].isFile())
+          archivos.add(listaArchivos[i].getName());
+      }
+
+      registrarEnLog(u,"rls",0);
+
+      return archivos;
     }
-
-    registrarEnLog(u,"rls",0);
-
-    return archivos;
+    return null;
   }
 
   public Boolean sub(Usuario u, byte[] archivo, String nombreArchivo)
