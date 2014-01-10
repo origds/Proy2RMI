@@ -29,13 +29,13 @@ implements Autenticador {
     return false;
   }
 
-  public int guardar(Usuario usuario)
+  public Boolean guardar(Usuario usuario)
   throws java.rmi.RemoteException {
     if(!usuarios.contains(usuario)){
       usuarios.add(usuario);
-      return 0;
+      return true;
     }
-    return 1;
+    return false;
   }
 
   public void setUsuarios(ArrayList<Usuario> usr)

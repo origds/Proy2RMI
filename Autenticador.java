@@ -6,7 +6,7 @@ extends java.rmi.Remote{
   public Boolean autenticado(Usuario u)
   throws java.rmi.RemoteException;
 
-  public int guardar(Usuario u)
+  public Boolean guardar(Usuario u)
   throws java.rmi.RemoteException;
 
   public void setUsuarios(ArrayList<Usuario> usr)

@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import Clases.*;
 import java.util.Iterator;
 
-
 public class c_rmifs {
 
+  static String server, usuarios, comandos;
+  static int puerto = 0;
+  
   private static ArrayList<Usuario> leerUsuariosArchivo(String arch)
   throws IOException {
     File archivo = null;
@@ -21,6 +23,9 @@ public class c_rmifs {
     String linea;
     ArrayList<Usuario> usrarch = new ArrayList<Usuario>();
 
+    if (arch.equals(""))
+      return null;
+
     try{
       archivo = new File (arch);
       fr = new FileReader (archivo);
@@ -28,8 +33,13 @@ public class c_rmifs {
 
       while((linea=br.readLine())!=null){
         parUserPass = linea.split(":");
-        Usuario u = new Usuario(parUserPass[0],parUserPass[1]);
-        usrarch.add(u);
+        if (parUserPass.length==2){
+          Usuario u = new Usuario(parUserPass[0],parUserPass[1]);
+          usrarch.add(u);
+        }
+        else{
+          System.out.println("Warning: Usuario no agregado. Error de sintaxis");
+        }
       }
       return usrarch;
 
@@ -54,22 +64,29 @@ public class c_rmifs {
     File archivo = null;
     FileReader fr = null;
     BufferedReader br = null;
-    String [] parUserPass;
+    String [] parCmdArg;
     String linea;
     ArrayList<Log> cmdarch = new ArrayList<Log>();
+    Log logCmd;
+
+    if (arch.equals(""))
+      return null;
 
     try{
       archivo = new File (arch);
       fr = new FileReader (archivo);
       br = new BufferedReader(fr);
-
       while((linea=br.readLine())!=null){
-        parUserPass = linea.split(":");
-        Log l = new Log(parUserPass[0],parUserPass[1]);
-        cmdarch.add(l);
+        parCmdArg = linea.split(" ");
+        if(parCmdArg.length==2)
+          logCmd = new Log(parCmdArg[0],parCmdArg[1]);
+        else
+          logCmd = new Log(parCmdArg[0],"");
+        cmdarch.add(logCmd);
+        if(parCmdArg[0].equals("sal"))
+          break;
       }
       return cmdarch;
-
     }
     catch(Exception e){
       System.out.println("Error leyendo comandos: " + e);
@@ -86,17 +103,64 @@ public class c_rmifs {
     return null;
   }
 
+  private static void registrarUsuarios(ArrayList<Usuario> usuarios, Usuario actual)
+  throws java.rmi.RemoteException {
+    try{
+      Solicitud sol = (Solicitud)
+      Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
 
+      sol.registrar(usuarios,actual);
+    }
+    catch (MalformedURLException murle) {
+      System.out.println();
+      System.out.println(
+        "MalformedURLException");
+      System.out.println(murle);
+    }
+    catch (RemoteException re) {
+      System.out.println();
+      System.out.println(
+        "RemoteException");
+      System.out.println(re);
+    }
+    catch (NotBoundException nbe) {
+      System.out.println();
+      System.out.println(
+       "NotBoundException");
+      System.out.println(nbe);
+    }
+  }
+
+  private static Usuario login() throws IOException {
+    BufferedReader br = new BufferedReader(new
+                            InputStreamReader(System.in));
+    String user = "";
+    String psw = "";
+    Usuario actual;
+
+    while(true){
+      System.out.println("Ingrese nombre de usuario: ");
+      user = br.readLine();
+      System.out.println("Ingrese contrasena: ");
+      psw = br.readLine();
+
+      if (user.length()!=0 && psw.length()!=0){
+        actual = new Usuario(user, psw);
+        return actual;
+      }
+      else{
+       System.out.println("Debe introducir un usuario y contrasena validas"); 
+      }
+    }
+  }
 
   public static void main (String[] args)
   throws java.rmi.RemoteException, IOException {
 
-    String server, usuarios, comandos;
+    boolean f,m,p,c;
     server = "";
     usuarios = "";
     comandos = "";
-    int puerto = 0;
-    boolean f,m,p,c;
     f= false;
     m= false;
     p = false; 
@@ -134,56 +198,66 @@ public class c_rmifs {
   System.out.println("Usuarios: "+usuarios);
   System.out.println("Comandos: "+comandos);
 
-  try{ 
-    Usuario u = new Usuario("usuario","123456");
+  try{
     Solicitud sol = (Solicitud)
     Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
+    Usuario uconectado = login();
+    ArrayList<Log> archcmd = new ArrayList<Log>();
+    ArrayList<Usuario> archuser = new ArrayList<Usuario>();
 
-    ArrayList<String> rec = new ArrayList<String>();
-    rec = sol.rls(u);
-    if (rec!=null){
-      Iterator<String> iterador = rec.iterator();
-      while(iterador.hasNext()){
-        String arch = iterador.next();
-        System.out.println("Encontrado: "+arch);
+    // Verificamos que el usuario este conectado
+
+    if(sol.registrado(uconectado)){
+      //Manejo de Archivo de Usuario
+      archuser = leerUsuariosArchivo(usuarios);
+      if(archuser!=null){
+        registrarUsuarios(archuser,uconectado);
       }
+
+      //Manejo de Archivo de Comandos
+
+    
+      archcmd = leerComandosArchivo(comandos);
+      if (archcmd!=null){
+        Iterator<Log> iterador = archcmd.iterator();
+        while(iterador.hasNext()){
+          Log casa = iterador.next();
+          System.out.println("comando: "+casa.getUsuario()+ " argumento: "+casa.getRegistro());
+        }
+      }
+
+
     }
     else{
-      System.out.println("No estas autenticado");
+
 
     }
+
   }
-
-
-
-   /* try {
-      leerComandosArchivo("registros.txt");
-    }*/
-    catch (MalformedURLException murle) {
-      System.out.println();
-      System.out.println(
-        "MalformedURLException");
-      System.out.println(murle);
-    }
-    catch (RemoteException re) {
-      System.out.println();
-      System.out.println(
-        "RemoteException");
-      System.out.println(re);
-    }
-    catch (NotBoundException nbe) {
-      System.out.println();
-      System.out.println(
-       "NotBoundException");
-      System.out.println(nbe);
-    }
+  catch (MalformedURLException murle) {
+    System.out.println();
+    System.out.println(
+      "MalformedURLException");
+    System.out.println(murle);
+  }
+  catch (RemoteException re) {
+    System.out.println();
+    System.out.println(
+      "RemoteException");
+    System.out.println(re);
+  }
+  catch (NotBoundException nbe) {
+    System.out.println();
+    System.out.println(
+     "NotBoundException");
+    System.out.println(nbe);
+  }
     /*catch(IOException ioe){
       System.out.println();
       System.out.println(
        "java.lang.ArithmeticException");
       System.out.println(ioe);
     }*/
-    System.out.println("Borrame");
   }
 
 

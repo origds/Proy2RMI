@@ -17,6 +17,8 @@ implements Solicitud {
 
   public static ArrayList<Log> logCmd = new ArrayList<Log>(); // 0 en registrarnEnLog
   public static ArrayList<Log> logProp = new ArrayList<Log>(); // 1 en registrarnEnLog
+  private static ArrayList<Usuario> online = new ArrayList<Usuario>(); // usuarios conectados
+
   public static int puerto = 0;
   public static String host = "";
 
@@ -33,24 +35,23 @@ implements Solicitud {
     host = h;
   }
 
-  private void registrarEnLog (Usuario u, String accion, int n){
-    Log nuevo = new Log(u.getUsuario(),accion);
-    if(n==0){
-      if (logCmd.size()==20)
-        logCmd.remove(0);
-      logCmd.add(nuevo);
-    }
-    else{
-      logProp.add(nuevo);
-    }
-  }
-
-  public void registrar(ArrayList<Usuario> usr)
+  private static Boolean estaConectado(Usuario u)
   throws java.rmi.RemoteException {
     try{
       Autenticador auten = (Autenticador)
       Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
-      auten.setUsuarios(usr);
+      if(online.contains(u)){
+        return true;
+      }
+      else{
+        if(auten.autenticado(u)){
+          online.add(u);
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
     }
     catch (NotBoundException nbe) {
       System.out.println();
@@ -63,7 +64,43 @@ implements Solicitud {
       System.out.println(
         "MalformedURLException");
       System.out.println(murle);
-    }    
+    }
+    return false;
+  }
+
+
+  private void registrarEnLog (Usuario u, String accion, int n){
+    Log nuevo = new Log(u.getUsuario(),accion);
+    if(n==0){
+      if (logCmd.size()==20)
+        logCmd.remove(0);
+      logCmd.add(nuevo);
+    }
+    else {
+      logProp.add(nuevo);
+    }
+  }
+
+  public void registrar(ArrayList<Usuario> usr, Usuario u)
+  throws java.rmi.RemoteException {
+    try{
+      Autenticador auten = (Autenticador)
+      Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");      
+      if(estaConectado(u))
+        auten.setUsuarios(usr);
+    }
+    catch (NotBoundException nbe) {
+      System.out.println();
+      System.out.println(
+       "NotBoundException");
+      System.out.println(nbe);
+    }
+    catch (MalformedURLException murle) {
+      System.out.println();
+      System.out.println(
+        "MalformedURLException");
+      System.out.println(murle);
+    }
   }
 
   private Boolean esPropietario(Usuario u, String nombreArchivo){
@@ -100,11 +137,7 @@ implements Solicitud {
 
     System.out.println("Puerto auten: "+ puerto+ " host auten: "+host);
 
-    try{
-      Autenticador auten = (Autenticador)
-      Naming.lookup("rmi://"+host+":"+puerto+"/AutenticadorService");
-
-      if (auten.autenticado(u)){
+      if (estaConectado(u)){
         for (int i = 0; i < listaArchivos.length; i++){
           if (listaArchivos[i].isFile())
             archivos.add(listaArchivos[i].getName());
@@ -114,49 +147,35 @@ implements Solicitud {
 
         return archivos;
       }
-    }
-    catch (MalformedURLException murle) {
-      System.out.println();
-      System.out.println(
-        "MalformedURLException");
-      System.out.println(murle);
-    }
-    catch (RemoteException re) {
-      System.out.println();
-      System.out.println(
-        "RemoteException");
-      System.out.println(re);
-    }
-    catch (NotBoundException nbe) {
-      System.out.println();
-      System.out.println(
-       "NotBoundException");
-      System.out.println(nbe);
-    }
-    return null;    
+    return null;
   }
 
   public Boolean sub(Usuario u, byte[] archivo, String nombreArchivo)
   throws java.rmi.RemoteException {
 
-    if (existeArchivo(nombreArchivo))
-      return false;
-
     try{
-      File file = new File(nombreArchivo);
-      BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getName()));
-        
-      output.write(archivo,0,archivo.length);
-      output.flush();
-      output.close();
+      if (existeArchivo(nombreArchivo))
+        return false;
+      if (estaConectado(u)){
 
-      registrarEnLog(u,"sub",0);
-      registrarEnLog(u,nombreArchivo,1);
+        File file = new File(nombreArchivo);
+        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getName()));
+          
+        output.write(archivo,0,archivo.length);
+        output.flush();
+        output.close();
 
-      return true;
+        registrarEnLog(u,"sub",0);
+        registrarEnLog(u,nombreArchivo,1);
 
-    } catch(Exception e) {
-      System.err.println("Error subiendo archivo: "+ e.getMessage());
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+    catch(Exception e){
+      System.out.println("Error bajando archivo: "+e.getMessage());
       e.printStackTrace();
     }
     return false;
@@ -165,41 +184,51 @@ implements Solicitud {
   public byte[] baj(Usuario u , String nombreArchivo)
   throws java.rmi.RemoteException {
     try{
-      File file = new File(nombreArchivo);
-      byte buffer[] = new byte[(int)file.length()];
- 
-      BufferedInputStream input = new BufferedInputStream(new FileInputStream(file.getName()));
- 
-      input.read(buffer,0,buffer.length);
-      input.close();
+      if (estaConectado(u)){      
+        File file = new File(nombreArchivo);
+        byte buffer[] = new byte[(int)file.length()];
+   
+        BufferedInputStream input = new BufferedInputStream(new FileInputStream(file.getName()));
+   
+        input.read(buffer,0,buffer.length);
+        input.close();
 
-      registrarEnLog(u,"baj",0);
+        registrarEnLog(u,"baj",0);
 
-      return buffer;
-
-    } catch(Exception e){
+        return buffer;
+      }
+      else{
+        return null;
+      }
+    } 
+    catch(Exception e){
       System.out.println("Error bajando archivo: "+e.getMessage());
       e.printStackTrace();
-
-      return null;
     }
-
-
+    return null;
   }
 
   public Boolean bor(Usuario u, String nombreArchivo)
   throws java.rmi.RemoteException {
-    if (existeArchivo(nombreArchivo) && esPropietario(u,nombreArchivo)){
-      File archivo = new File(nombreArchivo);
-      registrarEnLog(u,"bor",0);
-      return archivo.delete();
+    if(estaConectado(u)){
+      if (existeArchivo(nombreArchivo) && esPropietario(u,nombreArchivo)){
+        File archivo = new File(nombreArchivo);
+        registrarEnLog(u,"bor",0);
+        return archivo.delete();
+      }
+      return false;
     }
     return false;
   }
 
-  public void sal(Usuario u)
+  public Boolean sal(Usuario u)
   throws java.rmi.RemoteException {
     registrarEnLog(u,"sal",0);
+    return online.remove(u);
   }
 
+  public Boolean registrado(Usuario u)
+  throws java.rmi.RemoteException {
+    return estaConectado(u);
+  }
 }
