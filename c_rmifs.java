@@ -14,14 +14,14 @@ public class c_rmifs {
   static String server, usuarios, comandos;
   static int puerto = 0;
   
-  private static ArrayList<Usuario> leerUsuariosArchivo(String arch)
+  private static Usuario leerUsuariosArchivo(String arch)
   throws IOException {
     File archivo = null;
     FileReader fr = null;
     BufferedReader br = null;
     String [] parUserPass;
     String linea;
-    ArrayList<Usuario> usrarch = new ArrayList<Usuario>();
+    Usuario usrarch = null;
 
     if (arch.equals(""))
       return null;
@@ -34,11 +34,11 @@ public class c_rmifs {
       while((linea=br.readLine())!=null){
         parUserPass = linea.split(":");
         if (parUserPass.length==2){
-          Usuario u = new Usuario(parUserPass[0],parUserPass[1]);
-          usrarch.add(u);
+          usrarch = new Usuario(parUserPass[0],parUserPass[1]);
+          return usrarch;
         }
         else{
-          System.out.println("Warning: Usuario no agregado. Error de sintaxis");
+          System.out.println("Warning: Usuario no valido. Error de sintaxis");
         }
       }
       return usrarch;
@@ -103,32 +103,43 @@ public class c_rmifs {
     return null;
   }
 
-  private static void registrarUsuarios(ArrayList<Usuario> usuarios, Usuario actual)
-  throws java.rmi.RemoteException {
-    try{
-      Solicitud sol = (Solicitud)
-      Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
+   private static Log leerComandosConsola()
+  throws IOException {
 
-      sol.registrar(usuarios,actual);
+    BufferedReader br = null;
+    String [] parCmdArg;
+    String linea;
+    Log cmd = null;
+
+    try{
+      br = new BufferedReader(new InputStreamReader(System.in));
+
+      while(true){
+        System.out.println("\nIngrese un comando: ");
+        linea = br.readLine();
+
+        if (linea.length()!=0){
+          parCmdArg = linea.split(" ");
+          if(parCmdArg.length==2)
+            cmd = new Log(parCmdArg[0],parCmdArg[1]);
+          else if (parCmdArg.length==1){
+            cmd = new Log(parCmdArg[0],"");
+            if(parCmdArg[0].equals("sal")){
+              cmd = new Log(parCmdArg[0],"");
+              return cmd;
+            }
+          } else
+            System.out.println("\nDebe introducir un comando valido\n");
+          return cmd; 
+        }
+        else
+          System.out.println("\nDebe introducir un comando valido\n"); 
+      }
     }
-    catch (MalformedURLException murle) {
-      System.out.println();
-      System.out.println(
-        "MalformedURLException");
-      System.out.println(murle);
+    catch(Exception e){
+      System.out.println("Error leyendo comandos: " + e);
     }
-    catch (RemoteException re) {
-      System.out.println();
-      System.out.println(
-        "RemoteException");
-      System.out.println(re);
-    }
-    catch (NotBoundException nbe) {
-      System.out.println();
-      System.out.println(
-       "NotBoundException");
-      System.out.println(nbe);
-    }
+    return null;
   }
 
   private static Usuario login() throws IOException {
@@ -154,8 +165,7 @@ public class c_rmifs {
     }
   }
 
-  public static void main (String[] args)
-  throws java.rmi.RemoteException, IOException {
+  private static void menuCliente (String[] param) {
 
     boolean f,m,p,c;
     server = "";
@@ -166,98 +176,281 @@ public class c_rmifs {
     p = false; 
     c = false;
 
-  for ( int i = 0 ; i < (args.length)-1 ; i++ ) {
+    for ( int i = 0 ; i < (param.length)-1 ; i++ ) {
 
-    if (args[i].equals("-f") && !f) {
-        usuarios = args[i+1];
-        f = true;
-    } else if (args[i].equals("-m") && !m) {
-        server = args[i+1];
-        m = true;
-    } else if (args[i].equals("-p") && !p) {
-        puerto = Integer.parseInt(args[i+1]);
-        p = true;
-    } else if (args[i].equals("-c") && !c) {
-        comandos = args[i+1];
-        c = true;
-    } else {
-        System.out.println("Error de sintaxis: c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]");
-        System.exit(1); 
-    }
-
-    i = i+1;
-  }
-
-  if ((!p) || (!m)) {
-    System.out.println("Error de sintaxis: c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]");
-    System.exit(1); 
-  }
-
-  System.out.println("Puerto: "+puerto);
-  System.out.println("Servidor: "+server);
-  System.out.println("Usuarios: "+usuarios);
-  System.out.println("Comandos: "+comandos);
-
-  try{
-    Solicitud sol = (Solicitud)
-    Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
-    Usuario uconectado = login();
-    ArrayList<Log> archcmd = new ArrayList<Log>();
-    ArrayList<Usuario> archuser = new ArrayList<Usuario>();
-
-    // Verificamos que el usuario este conectado
-
-    if(sol.registrado(uconectado)){
-      //Manejo de Archivo de Usuario
-      archuser = leerUsuariosArchivo(usuarios);
-      if(archuser!=null){
-        registrarUsuarios(archuser,uconectado);
+      if (param[i].equals("-f") && !f) {
+          usuarios = param[i+1];
+          f = true;
+      } else if (param[i].equals("-m") && !m) {
+          server = param[i+1];
+          m = true;
+      } else if (param[i].equals("-p") && !p) {
+          puerto = Integer.parseInt(param[i+1]);
+          p = true;
+      } else if (param[i].equals("-c") && !c) {
+          comandos = param[i+1];
+          c = true;
+      } else {
+          System.out.println("Error de sintaxis: c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]");
+          System.exit(1); 
       }
 
-      //Manejo de Archivo de Comandos
+      i = i+1;
+    }
 
+    if ((!p) || (!m)) {
+      System.out.println("Error de sintaxis: c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]");
+      System.exit(1); 
+    }
+
+    System.out.println("Puerto: "+puerto);
+    System.out.println("Servidor: "+server);
+    System.out.println("Usuarios: "+usuarios);
+    System.out.println("Comandos: "+comandos);
+
+  }
+
+  private static void lls() {
+    File carpeta = new File("./");
+    File [] listaArchivos = carpeta.listFiles();
+
+    for (int i = 0; i < listaArchivos.length; i++){
+      if (listaArchivos[i].isFile())
+        System.out.println(listaArchivos[i].getName());
+    } 
+  }
+
+  private static Boolean existeArchivo(String nombreArchivo){
+    File carpeta = new File("./");
+    File [] listaArchivos = carpeta.listFiles();
+
+    for (int i = 0; i < listaArchivos.length; i++){
+      if (listaArchivos[i].isFile() && 
+          nombreArchivo.equals(listaArchivos[i].getName())){
+          return true;
+      }
+    }
+    return false;
+  }
+
+  private static byte[] archivoToBytes(String nombreArchivo) {
     
-      archcmd = leerComandosArchivo(comandos);
-      if (archcmd!=null){
-        Iterator<Log> iterador = archcmd.iterator();
-        while(iterador.hasNext()){
-          Log casa = iterador.next();
-          System.out.println("comando: "+casa.getUsuario()+ " argumento: "+casa.getRegistro());
-        }
+    try{    
+      File file = new File(nombreArchivo);
+      byte buffer[] = new byte[(int)file.length()];
+ 
+      BufferedInputStream input = new BufferedInputStream(new FileInputStream(file.getName()));
+ 
+      input.read(buffer,0,buffer.length);
+      input.close();
+
+      return buffer;
+    } 
+    catch(Exception e){
+      System.out.println("Error bajando archivo: "+e.getMessage());
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private static Boolean bytesToArchivo(byte[] archivo, String nombreArchivo)
+  throws java.rmi.RemoteException {
+
+    try{
+      if (existeArchivo(nombreArchivo)) {
+        System.out.println("\nError bajando archivo. Ya existe un archivo con este nombre\n");
+        return false;
       }
 
+      File file = new File(nombreArchivo);
+      BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getName()));
+        
+      output.write(archivo,0,archivo.length);
+      output.flush();
+      output.close();
+
+      return true;
+    }
+    catch(Exception e){
+      System.out.println("Error bajando archivo: "+e.getMessage());
+      e.printStackTrace();
+    }
+    return false;
+  }
+
+  private static void manual() {
+
+    System.out.println("\nLista de Comandos:\n");
+    System.out.println("rls - Muestra la lista de archivos disponibles en servidor centralizado.\n");
+    System.out.println("Sintaxis: rls\n");  
+    System.out.println("lls - Muestra la lista de archivos locales del directorio actual\n");
+    System.out.println("Sintaxis: lls\n");
+    System.out.println("sub - Sube un archivo disponible localmente al servidor remoto\n");
+    System.out.println("Sintaxis: sub nombrearchivo\n");
+    System.out.println("baj - Baja un archivo disponible en el servidor remoto\n");
+    System.out.println("Sintaxis: baj nombrearchivo\n");
+    System.out.println("bor - Borra el archivo en el servidor remoto\n");
+    System.out.println("Sintaxis: bor nombrearchivo\n");
+    System.out.println("info - Muestra la lista de comandos disponible con una breve descripcion\n");
+    System.out.println("Sintaxis: info\n");
+    System.out.println("sal - Termina la ejecucion del programa\n");
+    System.out.println("Sintaxis: sal\n");
+
+  }
+
+  private static void printRls(ArrayList<String> l) {
+    Iterator<String> iterador = l.iterator();
+    String archivo;
+    System.out.println("\nArchivos Remotos:\n");
+      while(iterador.hasNext()){
+        archivo  = iterador.next();
+        System.out.println(archivo);
+      }
+  }
+
+  private static void procesarComandos(Log comando, Usuario user){
+    String cmdactual, argumento;
+    boolean subio, borro, bajo;
+    subio = false;
+    borro = false;
+    bajo = false;
+    cmdactual = null;
+    argumento = null;
+
+    try {
+
+      Solicitud sol = (Solicitud)
+      Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
+      
+        cmdactual = comando.getUsuario();
+        argumento = comando.getRegistro();
+
+        if(cmdactual.equals("rls")) {
+          printRls(sol.rls(user));
+        
+        } else if (cmdactual.equals("lls")) {  
+          lls();
+
+        } else if (cmdactual.equals("sub")) {
+          subio = sol.sub(user, archivoToBytes(argumento), argumento);
+
+          if (!subio)
+            System.out.println("Error: el archivo no pudo subirse");
+
+        } else if (cmdactual.equals("baj")) {
+          bajo = bytesToArchivo(sol.baj(user, argumento), argumento);
+
+        } else if (cmdactual.equals("bor")) {
+          borro = sol.bor(user, argumento);
+
+          if (!borro)
+            System.out.println("Error: el archivo no fue borrado");
+
+        } else if (cmdactual.equals("info")) {
+          manual();
+
+        } else if (cmdactual.equals("sal")) {
+          sol.sal(user);
+
+        } else {
+          System.out.println("\nComando invalido\n");
+
+        } 
 
     }
-    else{
-
-
-    }
-
-  }
-  catch (MalformedURLException murle) {
-    System.out.println();
-    System.out.println(
-      "MalformedURLException");
-    System.out.println(murle);
-  }
-  catch (RemoteException re) {
-    System.out.println();
-    System.out.println(
-      "RemoteException");
-    System.out.println(re);
-  }
-  catch (NotBoundException nbe) {
-    System.out.println();
-    System.out.println(
-     "NotBoundException");
-    System.out.println(nbe);
-  }
-    /*catch(IOException ioe){
+    catch (MalformedURLException murle) {
       System.out.println();
       System.out.println(
-       "java.lang.ArithmeticException");
-      System.out.println(ioe);
-    }*/
+        "MalformedURLException");
+      System.out.println(murle);
+    }
+    catch (RemoteException re) {
+      System.out.println();
+      System.out.println(
+        "RemoteException");
+      System.out.println(re);
+    }
+    catch (NotBoundException nbe) {
+      System.out.println();
+      System.out.println(
+       "NotBoundException");
+      System.out.println(nbe);
+    }
+
+  }
+
+
+  public static void main (String[] args)
+  throws java.rmi.RemoteException, IOException {
+
+    menuCliente(args);
+
+    try{
+      Solicitud sol = (Solicitud)
+      Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
+      ArrayList<Log> archcmd = new ArrayList<Log>();
+      ArrayList<Usuario> archuser = new ArrayList<Usuario>();
+      Usuario uconectado = null;
+      Log comando = null;
+
+      //Manejo de Archivo de Usuario
+      uconectado = leerUsuariosArchivo(usuarios);
+      if(uconectado==null)
+        uconectado = login();
+
+      if (sol.registrado(uconectado)) {
+
+        //Manejo de Archivo de Comandos
+        if (!comandos.equals("")) {
+          archcmd = leerComandosArchivo(comandos);
+          if (archcmd!=null){
+            Iterator<Log> iterador = archcmd.iterator();
+            while(iterador.hasNext()){
+              comando = iterador.next();
+              procesarComandos(comando, uconectado);
+            }
+          }
+        } else {
+          comando = leerComandosConsola();
+          procesarComandos(comando, uconectado);
+          while(!comando.getUsuario().equals("sal")){
+            comando = leerComandosConsola();
+            procesarComandos(comando, uconectado);
+          }
+        }
+      } else {
+        System.out.println("");
+        System.out.println("Usuario y constrasena invalidas");
+        System.out.println("");
+
+      }
+
+
+    }
+    catch (MalformedURLException murle) {
+      System.out.println();
+      System.out.println(
+        "MalformedURLException");
+      System.out.println(murle);
+    }
+    catch (RemoteException re) {
+      System.out.println();
+      System.out.println(
+        "RemoteException");
+      System.out.println(re);
+    }
+    catch (NotBoundException nbe) {
+      System.out.println();
+      System.out.println(
+       "NotBoundException");
+      System.out.println(nbe);
+    }
+      /*catch(IOException ioe){
+        System.out.println();
+        System.out.println(
+         "java.lang.ArithmeticException");
+        System.out.println(ioe);
+      }*/
   }
 
 

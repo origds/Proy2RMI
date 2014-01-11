@@ -17,10 +17,7 @@ extends java.rmi.Remote {
   public Boolean bor(Usuario u, String nombreArchivo)
   throws java.rmi.RemoteException;
 
-  public Boolean sal(Usuario u)
-  throws java.rmi.RemoteException;
-
-  public void registrar(ArrayList<Usuario> usr, Usuario u)
+  public void sal(Usuario u)
   throws java.rmi.RemoteException;
 
   public Boolean registrado(Usuario u)
