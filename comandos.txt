@@ -1,5 +1,4 @@
 sub arch1
 sub arch2
-baj arch3
-sal
-baj arch4
+sub arch3
+sub arch4

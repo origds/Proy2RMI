@@ -8,6 +8,7 @@ import Clases.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.io.*;
 
 public class s_rmifs{
   static int puertolocal, puertoaut;
@@ -22,7 +23,55 @@ public class s_rmifs{
     catch(Exception e){
       System.out.println("Error: " + e);
     }
-  }  
+  }
+
+  private static Log procesarComandosConsola()
+  throws IOException {
+
+    BufferedReader br = null;
+    String [] parCmdArg;
+    String linea;
+    Log cmd = null;
+    SolicitudImpl sol = new SolicitudImpl();
+
+    try{
+      br = new BufferedReader(new InputStreamReader(System.in));
+
+      while(true){
+        System.out.println("\nIngrese un comando: ");
+        linea = br.readLine();
+  
+        if (linea.equals("log")) {
+          sol.printLog();
+        } else if (linea.equals("sal")) {
+          System.out.println("Ha salido correctamente. Hasta luego");
+          System.exit(0);
+        } else
+          System.out.println("\nDebe introducir un comando valido\n"); 
+     }
+    }
+    catch(Exception e){
+      System.out.println("Error leyendo comandos: " + e);
+    }
+    return null;
+  }
+
+  private static void pedirCmdConsola() {
+    Log cmd;
+
+    try {
+      
+      cmd = procesarComandosConsola();
+      while(!cmd.getUsuario().equals("sal")){
+        cmd = procesarComandosConsola();
+      }
+      System.out.println("\nHa salido correctamente. Hasta luego");
+
+    }
+    catch(Exception e){
+      System.out.println("Error leyendo comandos: " + e);
+    }
+  }
 
   public static void menuServer(String [] param) { 
     boolean l,h,r;
@@ -57,9 +106,6 @@ public class s_rmifs{
       System.exit(1); 
     }
 
-    System.out.println("Puerto Local: "+puertolocal+"\n");
-    System.out.println("Host: "+host+"\n");
-    System.out.println("Puerto: "+puertoaut+"\n");
   }
 
   public static void main(String [] args)
@@ -68,22 +114,18 @@ public class s_rmifs{
     Usuario u;
 
     menuServer(args);
+
+    System.out.println("Puerto Local: "+puertolocal+"\n");
+    System.out.println("Host: "+host+"\n");
+    System.out.println("Puerto: "+puertoaut+"\n");
+
     SolicitudImpl sol = new SolicitudImpl();
     sol.setPuerto(puertoaut);
     sol.setHost(host);
 
-      /*Autenticador a = (Autenticador)
-      Naming.lookup("rmi://"+host+":"+puertoaut+"/AutenticadorService");*/
+    new s_rmifs(puertolocal);
 
-      /*usr = a.getUsuarios();
-      Iterator<Usuario> iterador = usr.iterator();
-
-     while(iterador.hasNext()){
-      u = iterador.next();
-      System.out.println("Encontrado: "+u.getUsuario()+" "+u.getContrasena());
-     }*/
-
-     new s_rmifs(puertolocal);
+    pedirCmdConsola();
 
   }
 }

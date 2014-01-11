@@ -46,6 +46,21 @@ implements Solicitud {
     }
   }
 
+  public void printLog() {
+    Iterator<Log> iterador = logCmd.iterator();
+    Log log;
+    String usuario;
+    String registro;
+    int i = 1;
+
+    System.out.println("\nLog:\n");
+      while(iterador.hasNext()){
+        log = iterador.next();
+        System.out.println(i+") Usuario: "+log.getUsuario()+" Comando: "+log.getRegistro());
+        i++;
+      }
+  }
+
   private Boolean esPropietario(Usuario u, String nombreArchivo){
     Log log = new Log();
 
@@ -78,8 +93,6 @@ implements Solicitud {
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
 
-    System.out.println("Puerto auten: "+ puerto+ " host auten: "+host);
-
     for (int i = 0; i < listaArchivos.length; i++){
       if (listaArchivos[i].isFile())
         archivos.add(listaArchivos[i].getName());
@@ -95,9 +108,11 @@ implements Solicitud {
   throws java.rmi.RemoteException {
 
     try{
-      if (existeArchivo(nombreArchivo))
+      if (existeArchivo(nombreArchivo)) {
+        registrarEnLog(u,"sub",0);
         return false;
-
+      }
+      
       File file = new File(nombreArchivo);
       BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getName()));
         
@@ -111,7 +126,7 @@ implements Solicitud {
       return true;
     }
     catch(Exception e){
-      System.out.println("Error bajando archivo: "+e.getMessage());
+      System.out.println("Error subiendo archivo: "+e.getMessage());
       e.printStackTrace();
     }
     return false;
@@ -133,6 +148,7 @@ implements Solicitud {
       return buffer;
     } 
     catch(Exception e){
+      registrarEnLog(u,"baj",0);
       System.out.println("Error bajando archivo: "+e.getMessage());
       e.printStackTrace();
     }
@@ -146,6 +162,7 @@ implements Solicitud {
       registrarEnLog(u,"bor",0);
       return archivo.delete();
     }
+    registrarEnLog(u,"bor",0);
     return false;
   }
 
