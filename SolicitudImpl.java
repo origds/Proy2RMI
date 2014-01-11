@@ -34,6 +34,32 @@ implements Solicitud {
     host = h;
   }
 
+  private Boolean esPropietario(Usuario u, String nombreArchivo){
+    Log log = new Log();
+
+    Iterator<Log> iterador = logProp.iterator();
+    while(iterador.hasNext()){
+      log = iterador.next();
+      if(log.getUsuario().equals(u.getUsuario()) && 
+         log.getRegistro().equals(nombreArchivo))
+        return true;
+    }
+    return false;
+  }
+
+  private Boolean existeArchivo(String nombreArchivo){
+    File carpeta = new File("./");
+    File [] listaArchivos = carpeta.listFiles();
+
+    for (int i = 0; i < listaArchivos.length; i++){
+      if (listaArchivos[i].isFile() && 
+          nombreArchivo.equals(listaArchivos[i].getName())){
+          return true;
+      }
+    }
+    return false;
+  }
+
   private void registrarEnLog (Usuario u, String accion, int n){
     Log nuevo = new Log(u.getUsuario(),accion);
     if(n==0){
@@ -61,32 +87,6 @@ implements Solicitud {
       }
   }
 
-  private Boolean esPropietario(Usuario u, String nombreArchivo){
-    Log log = new Log();
-
-    Iterator<Log> iterador = logProp.iterator();
-    while(iterador.hasNext()){
-      log = iterador.next();
-      if(log.getUsuario().equals(u.getUsuario()) && 
-         log.getRegistro().equals(nombreArchivo))
-        return true;
-    }
-    return false;
-  }
-
-  private Boolean existeArchivo(String nombreArchivo){
-    File carpeta = new File("./");
-    File [] listaArchivos = carpeta.listFiles();
-
-    for (int i = 0; i < listaArchivos.length; i++){
-      if (listaArchivos[i].isFile() && 
-          nombreArchivo.equals(listaArchivos[i].getName())){
-          return true;
-      }
-    }
-    return false;
-  }
-
   public ArrayList<String> rls(Usuario u)
   throws java.rmi.RemoteException {
     ArrayList<String> archivos = new ArrayList<String>();
@@ -112,7 +112,7 @@ implements Solicitud {
         registrarEnLog(u,"sub",0);
         return false;
       }
-      
+
       File file = new File(nombreArchivo);
       BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getName()));
         

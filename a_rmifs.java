@@ -9,6 +9,8 @@ import Clases.*;
 
 public class a_rmifs {
 
+  /* Funcion para correr el servidor */
+
   public a_rmifs (int puerto){
     try{
       LocateRegistry.createRegistry(puerto);
@@ -20,6 +22,7 @@ public class a_rmifs {
     }
   }
 
+  /* Funcion para registrar los usuarios en el servidor */
   private static void leerUsuariosEnArchivo(String arch)
   throws java.rmi.RemoteException {
     File archivo = null;
@@ -54,6 +57,7 @@ public class a_rmifs {
     }
   }
 
+  /* Funcion Main */
   public static void main(String args[])
   throws java.rmi.RemoteException {
     
@@ -75,13 +79,13 @@ public class a_rmifs {
         System.exit(1); 
     }
 
-    i = i+1;
-  }
+      i = i+1;
+    }
 
-  if ((!f) || (!p)) {
-    System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
-    System.exit(1); 
-  }
+    if ((!f) || (!p)) {
+      System.out.println("Error de sintaxis: a_rmifs -f usuarios -p puerto");
+      System.exit(1); 
+    }
     
     System.out.println("Puerto: "+puerto+"\n");
     new a_rmifs(puerto);

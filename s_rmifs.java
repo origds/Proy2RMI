@@ -14,6 +14,7 @@ public class s_rmifs{
   static int puertolocal, puertoaut;
   static String host;
 
+  /* Funcion para correr el servidor */
   public s_rmifs (int puerto){
     try{
       LocateRegistry.createRegistry(puerto);
@@ -25,6 +26,7 @@ public class s_rmifs{
     }
   }
 
+  /* Funciones para manejar el menu */
   private static Log procesarComandosConsola()
   throws IOException {
 
@@ -108,6 +110,8 @@ public class s_rmifs{
 
   }
 
+  /*Funcion Main*/
+  
   public static void main(String [] args)
   throws java.rmi.RemoteException{
     ArrayList<Usuario> usr = new ArrayList<Usuario>();

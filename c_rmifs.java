@@ -14,6 +14,8 @@ public class c_rmifs {
   static String server, usuarios, comandos;
   static int puerto = 0;
   
+  /* Funciones para manejar el menu */
+
   private static Usuario leerUsuariosArchivo(String arch)
   throws IOException {
     File archivo = null;
@@ -424,6 +426,7 @@ public class c_rmifs {
       if(uconectado==null)
         uconectado = login();
 
+      // Verificacion de autenticacion de usuario
       if (sol.registrado(uconectado)) {
 
         //Manejo de Archivo de Comandos

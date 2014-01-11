@@ -22,4 +22,5 @@ extends java.rmi.Remote {
 
   public Boolean registrado(Usuario u)
   throws java.rmi.RemoteException;
+  
 }
