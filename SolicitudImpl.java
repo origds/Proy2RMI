@@ -40,7 +40,7 @@ implements Solicitud {
     Iterator<Log> iterador = logProp.iterator();
     while(iterador.hasNext()){
       log = iterador.next();
-      if(log.getUsuario().equals(u.getUsuario()) && 
+      if(log.getAccion().equals(u.getUsuario()) && 
          log.getRegistro().equals(nombreArchivo))
         return true;
     }
@@ -82,7 +82,7 @@ implements Solicitud {
     System.out.println("\nLog:\n");
       while(iterador.hasNext()){
         log = iterador.next();
-        System.out.println(i+") Usuario: "+log.getUsuario()+" Comando: "+log.getRegistro());
+        System.out.println(i+") Usuario: "+log.getAccion()+" Comando: "+log.getRegistro());
         i++;
       }
   }
@@ -114,11 +114,11 @@ implements Solicitud {
       }
 
       File arch = new File(nombreArchivo);
-      BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(arch.getName()));
+      BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(arch.getName()));
         
-      output.write(archivo,0,archivo.length);
-      output.flush();
-      output.close();
+      out.write(archivo,0,archivo.length);
+      out.flush();
+      out.close();
 
       registrarEnLog(u,"sub",0);
       registrarEnLog(u,nombreArchivo,1);
@@ -139,10 +139,10 @@ implements Solicitud {
         File archivo = new File(nombreArchivo);
         byte buffer[] = new byte[(int)archivo.length()];
    
-        BufferedInputStream input = new BufferedInputStream(new FileInputStream(archivo.getName()));
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(archivo.getName()));
    
-        input.read(buffer,0,buffer.length);
-        input.close();
+        in.read(buffer,0,buffer.length);
+        in.close();
 
         registrarEnLog(u,"baj",0);
 

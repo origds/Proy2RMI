@@ -18,6 +18,7 @@ public class c_rmifs {
 
   private static Usuario leerUsuariosArchivo(String arch)
   throws IOException {
+
     File archivo = null;
     FileReader fr = null;
     BufferedReader br = null;
@@ -171,6 +172,8 @@ public class c_rmifs {
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
 
+    System.out.println("\nArchivos Locales:\n");
+    
     for (int i = 0; i < listaArchivos.length; i++){
       if (listaArchivos[i].isFile())
         System.out.println(listaArchivos[i].getName());
@@ -204,7 +207,7 @@ public class c_rmifs {
       
       cmd = leerComandosConsola();
       procesarComandos(cmd, uconectado);
-      while(!cmd.getUsuario().equals("sal")){
+      while(!cmd.getAccion().equals("sal")){
         cmd = leerComandosConsola();
         procesarComandos(cmd, uconectado);
       }
@@ -231,7 +234,7 @@ public class c_rmifs {
       Solicitud sol = (Solicitud)
       Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
       
-        cmdactual = comando.getUsuario();
+        cmdactual = comando.getAccion();
         argumento = comando.getRegistro();
 
         if(cmdactual.equals("rls")) {
@@ -281,6 +284,7 @@ public class c_rmifs {
       System.out.println(
         "RemoteException");
       System.out.println(re);
+      System.exit(1);
     }
     catch (NotBoundException nbe) {
       System.out.println();
@@ -438,7 +442,7 @@ public class c_rmifs {
             Iterator<Log> iterador = archcmd.iterator();
             while(iterador.hasNext()){
               comando = iterador.next();
-              if (!comando.getUsuario().equals("sal")) {
+              if (!comando.getAccion().equals("sal")) {
                 procesarComandos(comando, uconectado);
               }
               else {
@@ -477,6 +481,7 @@ public class c_rmifs {
       System.out.println(
         "RemoteException");
       System.out.println(re);
+      System.exit(1);
     }
     catch (NotBoundException nbe) {
       System.out.println();

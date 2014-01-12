@@ -1,31 +1,31 @@
 package Clases;
 
 public class Log {
-  private String usuario;
+  private String accion;
   private String registro;
 
   public Log(){
   }  
 
-  public Log(String usuario, String registro){
-    this.usuario = usuario;
+  public Log(String accion, String registro){
+    this.accion = accion;
     this.registro = registro;
   }
 
   public String getLog(){
-    return registro +" "+usuario;
+    return registro +" "+accion;
   }
 
-  public void setUsuario(String usuario) {
-    this.usuario = usuario;
+  public void setAccion(String accion) {
+    this.accion = accion;
   }
 
   public void setRegistro(String registro) {
     this.registro =registro;
   }
 
-  public String getUsuario(){
-    return usuario;
+  public String getAccion(){
+    return accion;
   }
 
   public String getRegistro(){

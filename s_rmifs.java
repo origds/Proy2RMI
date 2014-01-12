@@ -64,7 +64,7 @@ public class s_rmifs{
     try {
       
       cmd = procesarComandosConsola();
-      while(!cmd.getUsuario().equals("sal")){
+      while(!cmd.getAccion().equals("sal")){
         cmd = procesarComandosConsola();
       }
       System.out.println("\nHa salido correctamente. Hasta luego");
