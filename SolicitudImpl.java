@@ -108,13 +108,13 @@ implements Solicitud {
   throws java.rmi.RemoteException {
 
     try{
-      if (existeArchivo(nombreArchivo)) {
+      if (existeArchivo(nombreArchivo) || archivo==null) {
         registrarEnLog(u,"sub",0);
         return false;
       }
 
-      File file = new File(nombreArchivo);
-      BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(file.getName()));
+      File arch = new File(nombreArchivo);
+      BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(arch.getName()));
         
       output.write(archivo,0,archivo.length);
       output.flush();
@@ -134,18 +134,22 @@ implements Solicitud {
 
   public byte[] baj(Usuario u , String nombreArchivo)
   throws java.rmi.RemoteException {
-    try{    
-      File file = new File(nombreArchivo);
-      byte buffer[] = new byte[(int)file.length()];
- 
-      BufferedInputStream input = new BufferedInputStream(new FileInputStream(file.getName()));
- 
-      input.read(buffer,0,buffer.length);
-      input.close();
+    try{
+      if(existeArchivo(nombreArchivo)){
+        File archivo = new File(nombreArchivo);
+        byte buffer[] = new byte[(int)archivo.length()];
+   
+        BufferedInputStream input = new BufferedInputStream(new FileInputStream(archivo.getName()));
+   
+        input.read(buffer,0,buffer.length);
+        input.close();
 
+        registrarEnLog(u,"baj",0);
+
+        return buffer;
+      }
       registrarEnLog(u,"baj",0);
-
-      return buffer;
+      return null;
     } 
     catch(Exception e){
       registrarEnLog(u,"baj",0);
