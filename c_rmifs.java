@@ -307,17 +307,19 @@ public class c_rmifs {
   }
 
   private static byte[] archivoToBytes(String nombreArchivo) {
-    
-    try{    
-      File file = new File(nombreArchivo);
-      byte buffer[] = new byte[(int)file.length()];
- 
-      BufferedInputStream input = new BufferedInputStream(new FileInputStream(file.getName()));
- 
-      input.read(buffer,0,buffer.length);
-      input.close();
+    try{
+      if(existeArchivo(nombreArchivo)){
+        File file = new File(nombreArchivo);
+        byte buffer[] = new byte[(int)file.length()];
+   
+        BufferedInputStream input = new BufferedInputStream(new FileInputStream(file.getName()));
+   
+        input.read(buffer,0,buffer.length);
+        input.close();
 
-      return buffer;
+        return buffer;
+      }
+      return null;
     } 
     catch(Exception e){
       System.out.println("Error bajando archivo: "+e.getMessage());
@@ -330,7 +332,7 @@ public class c_rmifs {
   throws java.rmi.RemoteException {
 
     try{
-      if (existeArchivo(nombreArchivo)) {
+      if (existeArchivo(nombreArchivo) || archivo==null) {
         return false;
       }
 

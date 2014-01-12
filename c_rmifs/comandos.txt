@@ -1,3 +1,0 @@
-sub arch1
-sub arch2
-sub arch3
