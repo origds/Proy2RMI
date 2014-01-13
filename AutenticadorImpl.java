@@ -1,3 +1,10 @@
+/**
+* AutenticadorImpl.java
+* Archivo donde se implementan las funciones de la interfaz Autenticador
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 import Clases.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,13 +20,18 @@ implements Autenticador {
 
   /**
   * AutenticadorImpl. Constructor de la clase AutenticadorImpl
-  * @param nombre de usuario que se asignara al atributo
   **/
   public AutenticadorImpl() 
   throws java.rmi.RemoteException {
     super();
   }
 
+  /**
+  * Autenticado. Funcion que verifica si un usuario se encuentra registrado para usar
+  * el servidor de archivos
+  * @param Usuario. instancia de la clase usuario que se verificara
+  * @return devuelve si el usuario fue autenticado o no 
+  **/
   public Boolean autenticado (Usuario usuario)
   throws java.rmi.RemoteException {
     Usuario u;
@@ -35,6 +47,11 @@ implements Autenticador {
     return false;
   }
 
+  /**
+  * Guardar. Funcion que agrega los usuarios a la lista de registrados del servidor de autenticacion.
+  * @param Usuario. instancia de la clase usuario que se agregara
+  * @return devuelve si el usuario fue agregado o no 
+  **/
   public Boolean guardar(Usuario usuario)
   throws java.rmi.RemoteException {
     if(!usuarios.contains(usuario)){
@@ -44,6 +61,10 @@ implements Autenticador {
     return false;
   }
 
+  /**
+  * setUsuarios. Funcion que guarda cada uno de los usuarios del arraylist al servidor de autenticacion
+  * @param Usr: ArrayList de usuarios que van a ser registrados
+  **/
   public void setUsuarios(ArrayList<Usuario> usr)
   throws java.rmi.RemoteException {
     Usuario u;
@@ -54,6 +75,10 @@ implements Autenticador {
     }
   }
 
+  /**
+  * getUsuarios. Funcion que devuelve la lista de usuarios registrados en el servidor de autenticacion
+  * @return devuelve la lista de usuarios registrados en el servidor de autenticacion 
+  **/
   public ArrayList<Usuario> getUsuarios()
   throws java.rmi.RemoteException {
     return usuarios;

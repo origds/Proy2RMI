@@ -1,3 +1,10 @@
+/**
+* Usuario.java
+* Archivo donde se define la clase Usuario
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 package Clases;
 
 import java.io.*;

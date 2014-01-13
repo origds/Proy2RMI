@@ -1,6 +1,6 @@
 /**
 * Log.java
-* Clase donde se define la clase Log
+* Archivo donde se define la clase Log
 * @autor Oriana Gomez e Ivan Travecedo
 * @version 1.0
 **/

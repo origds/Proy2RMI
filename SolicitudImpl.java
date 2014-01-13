@@ -1,3 +1,10 @@
+/**
+* SolicitudImpl.java
+* Archivo donde se implementan las funciones de la interfaz Solicitud
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 import java.rmi.Naming;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;

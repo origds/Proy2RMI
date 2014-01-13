@@ -1,3 +1,10 @@
+/**
+* Solicitud.java
+* Archivo donde se define la interfaz Solicitud
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 import Clases.*;
 import java.util.ArrayList;
 
