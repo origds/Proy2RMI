@@ -17,7 +17,7 @@ public class Usuario implements Serializable {
 
   /**
   * Usuario. Constructor que inicializa los atributos para una instancia de usuario
-  * @param Usuario: valor que se asignara a la variable 
+  * @param usuario: valor que se asignara a la variable 
   **/
   public Usuario(String usuario, String contrasena){
     this.usuario = usuario;
@@ -42,7 +42,7 @@ public class Usuario implements Serializable {
 
   /**
   * setUsuario. Funcion que asigna un valor al atributo usuario
-  * @param nombre de usuario que se asignara al atributo
+  * @param usuario: nombre de usuario que se asignara al atributo
   **/
   public void setUsuario(String usuario) {
     this.usuario = usuario;

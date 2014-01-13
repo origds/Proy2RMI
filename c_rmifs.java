@@ -1,3 +1,10 @@
+/**
+* c_rmifs.java
+* Archivo donde se implementa la clase para el funcionamiento del cliente 
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.net.MalformedURLException;
@@ -16,6 +23,11 @@ public class c_rmifs {
   
   /* Funciones para manejar el menu */
 
+  /**
+  * leerUsuariosArchivo. Funcion que lee de un archivo el usuario que va a auntenticarse 
+  * @param arch: nombre del archivo donde se encuentra el login y contrasena del usuario
+  * @return devuelve la instancia de usuario con los valores indicados
+  **/
   private static Usuario leerUsuariosArchivo(String arch) {
 
     File archivo = null;
@@ -64,6 +76,11 @@ public class c_rmifs {
     return null;
   }
 
+  /**
+  * leerComandosArchivo. Funcion que lee de un archivo los comandos que el usuario desea ejecutar 
+  * @param arch: nombre del archivo donde se encuentra los comandos a leer
+  * @return devuelve la lista de comandos con su argumento (si lo tiene)
+  **/
   private static ArrayList<Log> leerComandosArchivo(String arch) {
     File archivo = null;
     FileReader fr = null;
@@ -110,6 +127,10 @@ public class c_rmifs {
     return null;
   }
 
+  /**
+  * leerComandosConsola. Funcion que lee los comandos que son ingresados por consola por parte del cliente
+  * @return devuelve una instancia de log con el comando y argumento leido
+  **/
   private static Log leerComandosConsola() {
 
     BufferedReader br = null;
@@ -148,6 +169,10 @@ public class c_rmifs {
     return null;
   }
 
+  /**
+  * login. Funcion que pide por consola el nombre de usuario y contrasena al cliente
+  * @return devuelve la instancia de usuario con los valores indicados por consola
+  **/
   private static Usuario login() throws IOException {
     BufferedReader br = new BufferedReader(new
                             InputStreamReader(System.in));
@@ -171,6 +196,9 @@ public class c_rmifs {
     }
   }
 
+  /**
+  * lls. Funcion que retorna todos los archivos contenidos en la carpeta local del cliente
+  **/
   private static void lls() {
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
@@ -183,6 +211,9 @@ public class c_rmifs {
     } 
   }
 
+  /**
+  * manual. Funcion que imprime el manual del cliente
+  **/
   private static void manual() {
 
     System.out.println("\nLista de Comandos:\n");
@@ -203,6 +234,10 @@ public class c_rmifs {
 
   }
 
+  /**
+  * pedirCmdConsola. Funcion que pide infinitamente comandos al usuario por consola hasta que ejecute sal
+  * @param uconectado: usuario autenticado en el programa
+  **/
   private static void pedirCmdConsola(Usuario uconectado) {
     Log cmd;
 
@@ -222,7 +257,11 @@ public class c_rmifs {
     }
   }
 
-
+  /**
+  * procesarComandos. Funcion que evalua cada comando ingresado por consola o archivo para ejecutarlo
+  * @param comando: comando a ejecutar por el servidor e indicado por el usuario
+  * @param user: usuario que ejecuta el comando en el programa
+  **/
   private static void procesarComandos(Log comando, Usuario user){
     String cmdactual, argumento;
     boolean subio, borro, bajo;
@@ -306,6 +345,11 @@ public class c_rmifs {
 
   /* Funciones auxiliares para procesar comandos */
 
+  /**
+  * existeArchivo. Funcion que verifica si un archivo ya existe
+  * @param nombreArchivo: Nombre del archivo del que se desea saber si existe
+  * @return devuelve si el archivo dado existe o no en el servidor de archivos
+  **/
   private static Boolean existeArchivo(String nombreArchivo){
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
@@ -319,6 +363,11 @@ public class c_rmifs {
     return false;
   }
 
+  /**
+  * archivoToBytes. Funcion que convierte un archivo a un arreglo de bytes
+  * @param nombreArchivo: Nombre del archivo que se desea convertir
+  * @return devuelve el arreglo de bytes correspondiente al archivo
+  **/
   private static byte[] archivoToBytes(String nombreArchivo) {
     try{
       if(existeArchivo(nombreArchivo)){
@@ -341,6 +390,12 @@ public class c_rmifs {
     return null;
   }
 
+  /**
+  * bytesToArchivo. Funcion que convierte un arreglo de bytes en un archivo
+  * @param archivo: arreglo de bytes del archivo a convertir
+  * @param nombreArchivo: Nombre que se pondra al archivo al convertirlo
+  * @return devuelve si el archivo se pudo convertir o no
+  **/
   private static Boolean bytesToArchivo(byte[] archivo, String nombreArchivo) {
 
     try{
@@ -366,6 +421,11 @@ public class c_rmifs {
     return false;
   }
 
+  /**
+  * printRls. Funcion que imprime el ArrayList de los nombres de archivos en la carpeta local del 
+  * servidor remoto
+  * @param l: lista de nombres de archivo
+  **/
   private static void printRls(ArrayList<String> l) {
     Iterator<String> iterador = l.iterator();
     String archivo;
@@ -376,6 +436,10 @@ public class c_rmifs {
       }
   }
 
+  /**
+  * menuCliente. Funcion que maneja el menu presentado al cliente
+  * @param param: arreglo que toma los valores ingresados por consola como argumento al correr el programa
+  **/
   private static void menuCliente (String[] param) {
 
     boolean f,m,p,c;
@@ -421,8 +485,10 @@ public class c_rmifs {
 
   }
 
-  /*Funcion Main*/
-
+  /**
+  * main. Funcion que maneja las acciones del cliente
+  * @param args: lista de argumentos obtenidas por consola al correr el programa
+  **/
   public static void main (String[] args)
   throws java.rmi.RemoteException, IOException {
 

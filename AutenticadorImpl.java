@@ -29,7 +29,7 @@ implements Autenticador {
   /**
   * Autenticado. Funcion que verifica si un usuario se encuentra registrado para usar
   * el servidor de archivos
-  * @param Usuario. instancia de la clase usuario que se verificara
+  * @param usuario: instancia de la clase usuario que se verificara
   * @return devuelve si el usuario fue autenticado o no 
   **/
   public Boolean autenticado (Usuario usuario)
@@ -49,7 +49,7 @@ implements Autenticador {
 
   /**
   * Guardar. Funcion que agrega los usuarios a la lista de registrados del servidor de autenticacion.
-  * @param Usuario. instancia de la clase usuario que se agregara
+  * @param usuario: instancia de la clase usuario que se agregara
   * @return devuelve si el usuario fue agregado o no 
   **/
   public Boolean guardar(Usuario usuario)
@@ -63,7 +63,7 @@ implements Autenticador {
 
   /**
   * setUsuarios. Funcion que guarda cada uno de los usuarios del arraylist al servidor de autenticacion
-  * @param Usr: ArrayList de usuarios que van a ser registrados
+  * @param usr: ArrayList de usuarios que van a ser registrados
   **/
   public void setUsuarios(ArrayList<Usuario> usr)
   throws java.rmi.RemoteException {

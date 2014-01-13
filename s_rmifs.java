@@ -1,3 +1,10 @@
+/**
+* s_rmifs.java
+* Archivo donde se implementa la clase para el funcionamiento del servidor de archivos
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
@@ -6,10 +13,14 @@ import Clases.*;
 import java.io.*;
 
 public class s_rmifs{
+
   static int puertolocal, puertoaut;
   static String host;
 
-  /* Funcion para correr el servidor */
+  /**
+  * s_rmifs. Funcion que permite correr el servidor de archivos
+  * @param puerto: numero de puerto al que se le asociara el servicio de archivos
+  **/
   public s_rmifs (int puerto){
     try{
       LocateRegistry.createRegistry(puerto);
@@ -21,7 +32,9 @@ public class s_rmifs{
     }
   }
 
-  /* Funciones para manejar el menu */
+  /**
+  * procesarComandosConsola. Funcion que evalua cada comando ingresado por consola para ejecutarlo
+  **/
   private static Log procesarComandosConsola()
   throws IOException {
 
@@ -51,6 +64,9 @@ public class s_rmifs{
     return null;
   }
 
+  /**
+  * pedirCmdConsola. Funcion que pide infinitamente comandos al usuario por consola hasta que ejecute sal
+  **/
   private static void pedirCmdConsola() {
     Log cmd;
 
@@ -68,6 +84,10 @@ public class s_rmifs{
     }
   }
 
+  /**
+  * menuServer. Funcion que maneja el menu presentado al usuario del servidor del archivos
+  * @param param: arreglo que toma los valores ingresados por consola como argumento al correr el programa
+  **/
   public static void menuServer(String [] param) { 
     boolean l,h,r;
     l = false;
@@ -103,8 +123,10 @@ public class s_rmifs{
 
   }
 
-  /*Funcion Main*/
-  
+  /**
+  * main. Funcion que maneja las acciones del servidor de archivos
+  * @param args: lista de argumentos obtenidas por consola al correr el programa
+  **/
   public static void main(String [] args)
   throws java.rmi.RemoteException{
 

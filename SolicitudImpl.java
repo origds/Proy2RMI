@@ -28,19 +28,38 @@ implements Solicitud {
 
   public static final long serialVersionUID = 2L;
 
+  /**
+  * SolicitudImpl. Constructor de la clase SolicitudImpl
+  **/
   public SolicitudImpl() 
   throws java.rmi.RemoteException {
     super();
   }
 
+  /**
+  * setPuerto. Funcion que asigna un valor a la variable que representa el puerto donde
+  * correra el servidor de autenticacion
+  * @param p: valor que se asignara a la variable puerto
+  **/
   public static void setPuerto(int p){
     puerto = p;
   }
 
+  /**
+  * setHost. Funcion que asigna un valor a la variable que representa el IP donde correra 
+  * el servidor de autenticacion
+  * @param h: valor que se asignara a la variable host
+  **/
   public static void setHost(String h){
     host = h;
   }
 
+  /**
+  * esPropietario. Funcion que verifica si un archivo subido al servidor pertenece al usuario dado
+  * @param u: Usuario usado para ver si es propietario del archivo
+  * @param nombreArchivo: Nombre del archivo para ver si el usuario es propietario del mismo
+  * @return devuelve si el usuario es propietario de ese archivo o no
+  **/
   private Boolean esPropietario(Usuario u, String nombreArchivo){
     Log log = new Log();
 
@@ -54,6 +73,11 @@ implements Solicitud {
     return false;
   }
 
+  /**
+  * existeArchivo. Funcion que verifica si un archivo ya existe en el servidor de archivos
+  * @param nombreArchivo: Nombre del archivo del que se desea saber si existe
+  * @return devuelve si el archivo dado existe o no en el servidor de archivos
+  **/
   private Boolean existeArchivo(String nombreArchivo){
     File carpeta = new File("./");
     File [] listaArchivos = carpeta.listFiles();
@@ -67,6 +91,14 @@ implements Solicitud {
     return false;
   }
 
+  /**
+  * registrarEnLog. Funcion que registra en el ArrayList logCmd o logProp cada log o propietario
+  * nuevo generado en el servidor de archivos. 
+  * @param u: Usuario que realizo la accion a registrar en el log
+  * @param accion: accion realizada por el usuario
+  * @param n: indica en que ArrayList se guardara el log (si es 0 se guarda en el log de comandos
+  * si es 1 se guarda en la lista de propietarios)
+  **/
   private void registrarEnLog (Usuario u, String accion, int n){
     Log nuevo = new Log(u.getUsuario(),accion);
     if(n==0){
@@ -79,6 +111,9 @@ implements Solicitud {
     }
   }
 
+  /**
+  * printLog. Funcion que permite imprimir el ArrayList de Log de Comandos con formato 
+  **/
   public void printLog() {
     Iterator<Log> iterador = logCmd.iterator();
     Log log;
@@ -92,6 +127,11 @@ implements Solicitud {
       }
   }
 
+  /**
+  * rls. Funcion que retorna todos los archivos contenidos en la carpeta local del servidor remoto
+  * @param u: usuario que ejecuta el comando rls en el programa
+  * @return devuelve la lista de nombres de archivos contenidos en la carpeta local del serv remoto
+  **/
   public ArrayList<String> rls(Usuario u)
   throws java.rmi.RemoteException {
     ArrayList<String> archivos = new ArrayList<String>();
@@ -109,6 +149,13 @@ implements Solicitud {
       
   }
 
+  /**
+  * sub. Funcion que sube un archivo de la carpeta local del cliente al servidor de archivos remoto
+  * @param u: usuario que desea subir el archivo
+  * @param archivo: arreglo de bytes que representan al archivo a subir
+  * @param nombreArchivo: nombre del archivo que va a subirse al servidor
+  * @return devuelve si el archivo pudo subirse o no
+  **/
   public Boolean sub(Usuario u, byte[] archivo, String nombreArchivo)
   throws java.rmi.RemoteException {
 
@@ -137,6 +184,12 @@ implements Solicitud {
     return false;
   }
 
+  /**
+  * baj. Funcion que baja un archivo del servidor de archivos remoto a la carpeta local del cliente
+  * @param u: usuario que desea bajar el archivo
+  * @param nombreArchivo: nombre del archivo que va a bajarse del servidor
+  * @return devuelve si el archivo pudo bajarseo no
+  **/
   public byte[] baj(Usuario u , String nombreArchivo)
   throws java.rmi.RemoteException {
     try{
@@ -164,6 +217,13 @@ implements Solicitud {
     return null;
   }
 
+  /**
+  * bor. Funcion que borra un archivo que esta en la carpeta local del servidor de archivos
+  * siempre que el usuario a borrarlo sea su propietario
+  * @param u: usuario que desea borrar el archivo
+  * @param nombreArchivo: nombre del archivo que va a ser borrado
+  * @return devuelve si el archivo pudo borrarse o no
+  **/
   public Boolean bor(Usuario u, String nombreArchivo)
   throws java.rmi.RemoteException {
     if (existeArchivo(nombreArchivo) && esPropietario(u,nombreArchivo)){
@@ -175,11 +235,20 @@ implements Solicitud {
     return false;
   }
 
+  /**
+  * sal. Funcion que permite al usuario salir del sistema y lo registra en log
+  * @param u: usuario que desea salir
+  **/
   public void sal(Usuario u)
   throws java.rmi.RemoteException {
     registrarEnLog(u,"sal",0);
   }
 
+  /**
+  * regustrado. Funcion que permite al servidor de archivos saber si un usuario esta autenticado
+  * @param u: usuario a autenticar
+  * @return devuelve si el usuario esta autenticado o no
+  **/
   public Boolean registrado(Usuario u)
   throws java.rmi.RemoteException {
 

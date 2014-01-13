@@ -1,3 +1,10 @@
+/**
+* a_rmifs.java
+* Archivo donde se implementa la clase para el funcionamiento del servidor de autenticacion
+* @autor Oriana Gomez e Ivan Travecedo
+* @version 1.0
+**/
+
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
@@ -7,8 +14,10 @@ import Clases.*;
 
 public class a_rmifs {
 
-  /* Funcion para correr el servidor */
-
+  /**
+  * a_rmifs. Funcion que permite correr el servidor de autenticacion
+  * @param puerto: numero de puerto al que se le asociara el servicio de autenticacion
+  **/
   public a_rmifs (int puerto){
     try{
       LocateRegistry.createRegistry(puerto);
@@ -20,7 +29,12 @@ public class a_rmifs {
     }
   }
 
-  /* Funcion para registrar los usuarios en el servidor */
+  /**
+  * leerUsuariosEnArchivo. Funcion que lee de un archivo los usuarios a registrar en 
+  * el servidor de autenticacion
+  * @param arch: nombre del archivo donde se encuentra el login y contrasena de los 
+  * usuarios a registrar
+  **/
   private static void leerUsuariosEnArchivo(String arch)
   throws java.rmi.RemoteException {
     File archivo = null;
@@ -55,7 +69,10 @@ public class a_rmifs {
     }
   }
 
-  /* Funcion Main */
+  /**
+  * main. Funcion que maneja las acciones del servidor de autenticacion
+  * @param args: lista de argumentos obtenidas por consola al correr el programa
+  **/
   public static void main(String args[])
   throws java.rmi.RemoteException {
     

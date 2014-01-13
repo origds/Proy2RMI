@@ -19,8 +19,8 @@ public class Log {
 
   /**
   * Log. Constructor de la clase, usando parametros
-  * @param Accion: accion que se registra en el log
-  * @param Registro: argumento que acompana la accion en el log
+  * @param accion: accion que se registra en el log
+  * @param registro: argumento que acompana la accion en el log
   **/
   public Log(String accion, String registro){
     this.accion = accion;
@@ -37,7 +37,7 @@ public class Log {
 
   /**
   * setAccion. Asigna un valor al atributo accion de la instacia de log
-  * @param Accion: valor que sera asignado al atributo accion
+  * @param accion: valor que sera asignado al atributo accion
   **/
   public void setAccion(String accion) {
     this.accion = accion;
@@ -45,7 +45,7 @@ public class Log {
 
   /**
   * setRegistro. Asigna un valor al atributo registro de la instacia de log
-  * @param Registro: valor que sera asignado al atributo registro
+  * @param registro: valor que sera asignado al atributo registro
   **/
   public void setRegistro(String registro) {
     this.registro =registro;
