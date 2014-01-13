@@ -16,8 +16,7 @@ public class c_rmifs {
   
   /* Funciones para manejar el menu */
 
-  private static Usuario leerUsuariosArchivo(String arch)
-  throws IOException {
+  private static Usuario leerUsuariosArchivo(String arch) {
 
     File archivo = null;
     FileReader fr = null;
@@ -47,14 +46,17 @@ public class c_rmifs {
       return usrarch;
 
     }
-    catch(Exception e){
-      System.out.println("Error leyendo usuarios: " + e);
+    catch(FileNotFoundException e){
+      System.out.println("Error abriendo archivo: " + e);
+    } 
+    catch (IOException e1) {
+      System.out.println("Error leyendo: " + e1);
     }
     finally {
-     try{
-      if(fr!=null)
-        fr.close();
-      }
+      try{
+        if(fr!=null)
+          fr.close();
+        }
       catch (Exception e2){
         System.out.println("Error cerrando arch usuarios: " + e2);
       }
@@ -62,8 +64,7 @@ public class c_rmifs {
     return null;
   }
 
-  private static ArrayList<Log> leerComandosArchivo(String arch)
-  throws IOException {
+  private static ArrayList<Log> leerComandosArchivo(String arch) {
     File archivo = null;
     FileReader fr = null;
     BufferedReader br = null;
@@ -91,10 +92,13 @@ public class c_rmifs {
       }
       return cmdarch;
     }
-    catch(Exception e){
-      System.out.println("Error leyendo comandos: " + e);
+    catch(FileNotFoundException e){
+      System.out.println("Error abriendo archivo: " + e);
     }
-    finally {
+    catch(IOException e1) {
+      System.out.println("Error leyendo: " + e1);
+    }
+    finally { 
      try{
       if(fr!=null)
         fr.close();
@@ -106,8 +110,7 @@ public class c_rmifs {
     return null;
   }
 
-   private static Log leerComandosConsola()
-  throws IOException {
+  private static Log leerComandosConsola() {
 
     BufferedReader br = null;
     String [] parCmdArg;
@@ -118,7 +121,7 @@ public class c_rmifs {
       br = new BufferedReader(new InputStreamReader(System.in));
 
       while(true){
-        System.out.println("\nIngrese un comando: ");
+        System.out.print("\nIngrese un comando: ");
         linea = br.readLine();
 
         if (linea.length()!=0){
@@ -132,15 +135,15 @@ public class c_rmifs {
               return cmd;
             }
           } else
-            System.out.println("\nDebe introducir un comando valido\n");
+            System.out.println("\nDebe introducir un comando valido");
           return cmd; 
         }
         else
-          System.out.println("\nDebe introducir un comando valido\n"); 
+          System.out.println("\nDebe introducir un comando valido"); 
       }
     }
-    catch(Exception e){
-      System.out.println("Error leyendo comandos: " + e);
+    catch(IOException e1) {
+      System.out.println("Error leyendo: " + e1);
     }
     return null;
   }
@@ -183,19 +186,19 @@ public class c_rmifs {
   private static void manual() {
 
     System.out.println("\nLista de Comandos:\n");
-    System.out.println("rls - Muestra la lista de archivos disponibles en servidor centralizado.\n");
+    System.out.println("rls - Muestra la lista de archivos disponibles en servidor centralizado.");
     System.out.println("Sintaxis: rls\n");  
-    System.out.println("lls - Muestra la lista de archivos locales del directorio actual\n");
+    System.out.println("lls - Muestra la lista de archivos locales del directorio actual");
     System.out.println("Sintaxis: lls\n");
-    System.out.println("sub - Sube un archivo disponible localmente al servidor remoto\n");
+    System.out.println("sub - Sube un archivo disponible localmente al servidor remoto");
     System.out.println("Sintaxis: sub nombrearchivo\n");
-    System.out.println("baj - Baja un archivo disponible en el servidor remoto\n");
+    System.out.println("baj - Baja un archivo disponible en el servidor remoto");
     System.out.println("Sintaxis: baj nombrearchivo\n");
-    System.out.println("bor - Borra el archivo en el servidor remoto\n");
+    System.out.println("bor - Borra el archivo en el servidor remoto");
     System.out.println("Sintaxis: bor nombrearchivo\n");
-    System.out.println("info - Muestra la lista de comandos disponible con una breve descripcion\n");
+    System.out.println("info - Muestra la lista de comandos disponible con una breve descripcion");
     System.out.println("Sintaxis: info\n");
-    System.out.println("sal - Termina la ejecucion del programa\n");
+    System.out.println("sal - Termina la ejecucion del programa");
     System.out.println("Sintaxis: sal\n");
 
   }
@@ -247,19 +250,25 @@ public class c_rmifs {
           subio = sol.sub(user, archivoToBytes(argumento), argumento);
 
           if (!subio)
-            System.out.println("Error: el archivo " + argumento + " no pudo subirse");
+            System.out.println("\nError: el archivo " + argumento + " no pudo subirse");
+          else
+            System.out.println("\nEl archivo " + argumento + " se subio correctamente");
 
         } else if (cmdactual.equals("baj")) {
           bajo = bytesToArchivo(sol.baj(user, argumento), argumento);
 
           if (!bajo)
-            System.out.println("Error: el archivo " + argumento + " no pudo bajarse");
+            System.out.println("\nError: el archivo " + argumento + " no pudo bajarse");
+          else
+            System.out.println("\nEl archivo " + argumento + " se bajo correctamente");
 
         } else if (cmdactual.equals("bor")) {
           borro = sol.bor(user, argumento);
 
           if (!borro)
-            System.out.println("Error: el archivo " + argumento + " no fue borrado");
+            System.out.println("\nError: el archivo " + argumento + " no fue borrado");
+          else
+            System.out.println("\nEl archivo " + argumento + " fue borrado");
 
         } else if (cmdactual.equals("info")) {
           manual();
@@ -332,8 +341,7 @@ public class c_rmifs {
     return null;
   }
 
-  private static Boolean bytesToArchivo(byte[] archivo, String nombreArchivo)
-  throws java.rmi.RemoteException {
+  private static Boolean bytesToArchivo(byte[] archivo, String nombreArchivo) {
 
     try{
       if (existeArchivo(nombreArchivo) || archivo==null) {
@@ -349,9 +357,11 @@ public class c_rmifs {
 
       return true;
     }
-    catch(Exception e){
-      System.out.println("Error bajando archivo: "+e.getMessage());
-      e.printStackTrace();
+    catch(FileNotFoundException e){
+      System.out.println("Error abriendo archivo: " + e);
+    }
+    catch(IOException e1) {
+      System.out.println("Error leyendo: " + e1);
     }
     return false;
   }
@@ -422,7 +432,6 @@ public class c_rmifs {
       Solicitud sol = (Solicitud)
       Naming.lookup("rmi://"+server+":"+puerto+"/ArchivosService");
       ArrayList<Log> archcmd = new ArrayList<Log>();
-      ArrayList<Usuario> archuser = new ArrayList<Usuario>();
       Usuario uconectado = null;
       Log comando = null;
       Boolean sal = false;
@@ -454,7 +463,7 @@ public class c_rmifs {
             if (!sal) 
               pedirCmdConsola(uconectado);
             else
-              System.out.println("Ha salido correctamente. Hasta luego");
+              System.out.println("\nHa salido correctamente. Hasta luego");
           } else {
             System.out.println("No se pudo leer el archivo de comandos");
             System.exit(1);
@@ -465,7 +474,7 @@ public class c_rmifs {
         }
       } else {
         System.out.println("");
-        System.out.println("Usuario y constrasena invalidas");
+        System.out.println("\nUsuario y constrasena invalidas");
         System.out.println("");
 
       }

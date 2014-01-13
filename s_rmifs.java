@@ -1,13 +1,9 @@
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 
 import Clases.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.io.*;
 
 public class s_rmifs{
@@ -31,22 +27,20 @@ public class s_rmifs{
   throws IOException {
 
     BufferedReader br = null;
-    String [] parCmdArg;
     String linea;
-    Log cmd = null;
     SolicitudImpl sol = new SolicitudImpl();
 
     try{
       br = new BufferedReader(new InputStreamReader(System.in));
 
       while(true){
-        System.out.println("\nIngrese un comando: ");
+        System.out.print("\nIngrese un comando: ");
         linea = br.readLine();
   
         if (linea.equals("log")) {
           sol.printLog();
         } else if (linea.equals("sal")) {
-          System.out.println("Ha salido correctamente. Hasta luego");
+          System.out.println("\nHa salido correctamente. Hasta luego");
           System.exit(0);
         } else
           System.out.println("\nDebe introducir un comando valido\n"); 
@@ -114,8 +108,6 @@ public class s_rmifs{
   
   public static void main(String [] args)
   throws java.rmi.RemoteException{
-    ArrayList<Usuario> usr = new ArrayList<Usuario>();
-    Usuario u;
 
     menuServer(args);
 

@@ -1,6 +1,4 @@
 import java.rmi.Naming;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 
@@ -75,8 +73,6 @@ implements Solicitud {
   public void printLog() {
     Iterator<Log> iterador = logCmd.iterator();
     Log log;
-    String usuario;
-    String registro;
     int i = 1;
 
     System.out.println("\nLog:\n");
