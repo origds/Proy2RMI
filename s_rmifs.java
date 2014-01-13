@@ -114,9 +114,9 @@ public class s_rmifs{
     System.out.println("Host: "+host+"\n");
     System.out.println("Puerto: "+puertoaut+"\n");
 
-    SolicitudImpl sol = new SolicitudImpl();
-    sol.setPuerto(puertoaut);
-    sol.setHost(host);
+    SolicitudImpl.setPuerto(puertoaut);
+    SolicitudImpl.setHost(host);
+
 
     new s_rmifs(puertolocal);
 

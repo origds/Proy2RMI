@@ -292,7 +292,7 @@ public class c_rmifs {
       System.out.println();
       System.out.println(
         "RemoteException");
-      System.out.println(re);
+      System.out.println("Imposible conectar al servidor de archivos");
       System.exit(1);
     }
     catch (NotBoundException nbe) {
@@ -489,7 +489,7 @@ public class c_rmifs {
       System.out.println();
       System.out.println(
         "RemoteException");
-      System.out.println(re);
+      System.out.println("Imposible conectar al servidor de archivos");
       System.exit(1);
     }
     catch (NotBoundException nbe) {
@@ -498,21 +498,5 @@ public class c_rmifs {
        "NotBoundException");
       System.out.println(nbe);
     }
-      /*catch(IOException ioe){
-        System.out.println();
-        System.out.println(
-         "java.lang.ArithmeticException");
-        System.out.println(ioe);
-      }*/
   }
-
-
-
-
-
-
-
-
-
-
 }
