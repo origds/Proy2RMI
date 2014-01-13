@@ -11,6 +11,10 @@ implements Autenticador {
 
   public static final long serialVersionUID = 1L;
 
+  /**
+  * AutenticadorImpl. Constructor de la clase AutenticadorImpl
+  * @param nombre de usuario que se asignara al atributo
+  **/
   public AutenticadorImpl() 
   throws java.rmi.RemoteException {
     super();
