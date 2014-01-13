@@ -80,7 +80,7 @@ public class c_rmifs {
       fr = new FileReader (archivo);
       br = new BufferedReader(fr);
       while((linea=br.readLine())!=null){
-        parCmdArg = linea.split(" ");
+        parCmdArg = linea.split(" ",2);
         if(parCmdArg.length==2)
           logCmd = new Log(parCmdArg[0],parCmdArg[1]);
         else
@@ -122,7 +122,7 @@ public class c_rmifs {
         linea = br.readLine();
 
         if (linea.length()!=0){
-          parCmdArg = linea.split(" ");
+          parCmdArg = linea.split(" ",2);
           if(parCmdArg.length==2)
             cmd = new Log(parCmdArg[0],parCmdArg[1]);
           else if (parCmdArg.length==1){
