@@ -19,6 +19,8 @@ implements Solicitud {
   public static int puerto = 0;
   public static String host = "";
 
+  public static final long serialVersionUID = 2L;
+
   public SolicitudImpl() 
   throws java.rmi.RemoteException {
     super();

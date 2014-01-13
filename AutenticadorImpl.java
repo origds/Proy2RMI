@@ -9,6 +9,8 @@ implements Autenticador {
 
   public static ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 
+  public static final long serialVersionUID = 1L;
+
   public AutenticadorImpl() 
   throws java.rmi.RemoteException {
     super();

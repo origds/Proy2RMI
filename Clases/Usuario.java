@@ -6,6 +6,8 @@ public class Usuario implements Serializable {
   private String usuario;
   private String contrasena;
 
+  public static final long serialVersionUID = 3L;
+
   public Usuario(String usuario, String contrasena){
     this.usuario = usuario;
     this.contrasena = contrasena;

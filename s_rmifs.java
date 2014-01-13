@@ -3,7 +3,6 @@ import java.rmi.registry.LocateRegistry;
 
 import Clases.*;
 
-import java.util.ArrayList;
 import java.io.*;
 
 public class s_rmifs{
