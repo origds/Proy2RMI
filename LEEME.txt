@@ -1,0 +1,78 @@
+Proyecto 2: Servidor de archivos en red con RMI
+Autores: Oriana Gómez   09-10336
+         Iván Travecedo 08-11131
+
+El programa simula un servidor de archivos centralizado que cuenta
+con un segundo servidor de autenticación dedicado solo a verificar
+si los usuarios que se conectan al servidor de archivos están
+autorizados a realizar peticiones.
+En este sentido, los clientes se comunican directamente con el servidor
+de archivos que a su vez se comunica con el servidor de autenticación.
+
+Para compilar:
+  Sólo debe ser ejecutado el comando make
+
+Para ejecutar:
+  1) Se debe correr primero el servidor de autenticación:
+      java a_rmifs -f usuarios -p puerto
+  Donde:
+    <usuarios> son los usuarios autorizados a usar el servidor de archivos
+    <puerto> es el puerto del servidor de autenticación
+  2) Correr el servidor de archivos
+      java s_rmifs -l puertolocal -h host -r puerto
+  Donde:
+    <puertolocal> Este será el puerto que usará el rmiregistry que tendrá 
+                  información de los objetos remotos publicados por el 
+                  servidor de archivos.
+    <host> Es el nombre DNS o dirección IP del computador donde corre el 
+            servidor de autenticación.
+    <puerto> Este será el puerto que usará el rmiregistry que tendrá 
+            información de los objetos remotos publicados por el servidor
+            de autenticación.
+  3) Correr clientes
+      java c_rmifs [-f usuarios] -m servidor -p puerto [-c comandos]
+  Donde:
+  <usuarios> Es el nombre del archivo con los usuarios y claves.
+  <servidor> Es el nombre DNS o dirección IP del computador donde corre el 
+              servidor de archivos.
+  <puerto> puerto donde estará el rmiregistry del servidor.
+  <comandos> Archivo que contendrá en cada línea, uno de los comandos 
+            que el cliente puede ejecutar
+            De no existir el comando 'sal' en el archivo, 
+            pasa a pedir comandos por consola
+
+  Si un cliente intenta conectarse al servidor de archivos y
+  este no está corriendo se presentará un mensaje de error.
+
+Consideraciones:
+
+  - No se pueden subir archivos cuyo nombre ya se encuentre 
+    asociado a otro archivo en el servidor
+  - No se pueden bajar archivos cuyo nombre ya se encuentre
+    asociado a otro archivo en la máquina del cliente
+  - No se pueden borrar archivos de los que el cliente no es
+    propietario
+  - Solo estarán disponibles para ser bajados los archivos que
+    se encuentren en el mismo directorio (no subdirectorios)
+    donde corre el servidor de archivos
+  - No se tomó en cuenta si existen usuarios repetidos
+
+Descripción de archivos:
+
+Autenticador.java: Interfaz que define las funciones que provee el servidor de autenticacion
+                   al servidor de archivos
+AutenticadorImpl.java: Implementación de las funciones definidas en Autenticador.java
+Solicitud.java: Interfaz que define las funciones que provee el servidor de archivos a los clientes
+SolicitudImpl.java: Implementación de las funciones de Solicitud.java. Se hacen llamadas 
+                    a las funciones definidas en AutenticadorImpl para manejar cliente/servidor
+                    del servidor de archivos
+
+c_rmifs.java: Programa cliente que se comunica con el servidor de archivos
+s_rmifs.java: Servidor de archivos que recibe solicitudes de los clientes
+a_rmifs.java: Servidor de autenticación que recibe solicitudes del servidor de archivos
+
+Usuario.java: Clase que define a un usuario. Implementa "Serializable" para poder ser enviado
+              como parametros en las funciones
+Log.java: Clase que define un registro con identificador y valor. Es usado para guardar el historial
+          de comandos ejecutados por el cliente y para guardar los comandos recibidos por archivo
+          del cliente
