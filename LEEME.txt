@@ -1,6 +1,7 @@
 Proyecto 2: Servidor de archivos en red con RMI
 Autores: Oriana Gómez   09-10336
          Iván Travecedo 08-11131
+Fecha: 16/01/14
 
 El programa simula un servidor de archivos centralizado que cuenta
 con un segundo servidor de autenticación dedicado solo a verificar
@@ -56,6 +57,12 @@ Consideraciones:
     se encuentren en el mismo directorio (no subdirectorios)
     donde corre el servidor de archivos
   - No se tomó en cuenta si existen usuarios repetidos
+  - Solo se mantiene la informacion del usuario propietario de un archivo
+    mientras la conexion del servidor se mantenga activa, una vez se 
+    desconecta el servidor de archivos esta informacion se pierde
+  - En el archivo leido despues del flag -f de un cliente, en caso de haber
+    mas de un usuario:contraseña en el mismo, solo se tomara el primero
+    para realizar la autenticacion
 
 Descripción de archivos:
 
